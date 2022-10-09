@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,13 +13,15 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Bot {
-    public DcMotor tLeftDT  = null;
-    public DcMotor bLeftDT  = null;
-    public DcMotor tRightDT = null;
-    public DcMotor bRightDT = null;
-    public DcMotor Lift     = null;
-    public Servo   Claw     = null;
-    public ModernRoboticsI2cGyro gyro = null;
+    public static DcMotor tLeftDT  = null;
+    public static DcMotor bLeftDT  = null;
+    public static DcMotor tRightDT = null;
+    public static DcMotor bRightDT = null;
+    public static DcMotor Lift     = null;
+    public static Servo   Claw     = null;
+    public static ModernRoboticsI2cGyro gyro = null;
+
+
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
@@ -42,13 +43,16 @@ public class Bot {
         opMode.telemetry.addLine("Gyro Calibrated");
         opMode.telemetry.update();
 
-        tLeftDT.setDirection(DcMotor.Direction.REVERSE);
-        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+
 
         bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -62,6 +66,37 @@ public class Bot {
 
         opMode.telemetry.addLine("Initialization Complete");
         opMode.telemetry.update();
+
+
     }
 
+    //driving using only Mecanum strafe
+    public static void strafeDrive (float distanceX, float distanceY, double speed, LinearOpMode opMode)
+    {
+        double tLeftPower  = tLeftDT.getCurrentPosition()  + ( distanceX + 2 * ( distanceY *    distanceX   ));
+        double bLeftPower  = bLeftDT.getCurrentPosition()  + (-distanceX + 2 * ( distanceY * ( -distanceX ) ));
+        double tRightPower = tRightDT.getCurrentPosition() + (-distanceX + 2 * ( distanceY * ( -distanceX ) ));
+        double bRightPower = bRightDT.getCurrentPosition() + ( distanceX + 2 * ( distanceY *    distanceX   ));
+
+        tLeftDT.setPower(speed);
+        bLeftDT.setPower(speed);
+        tLeftDT.setPower(speed);
+        bLeftDT.setPower(speed);
+
+        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        tLeftDT.setTargetPosition( (int)tLeftPower);
+        bLeftDT.setTargetPosition( (int)bLeftPower);
+        tRightDT.setTargetPosition((int)tRightPower);
+        bRightDT.setTargetPosition((int)bRightPower);
+
+    }
+
+
 }
+
+
