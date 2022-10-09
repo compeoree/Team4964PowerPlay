@@ -23,7 +23,7 @@ public class Bot {
     public ModernRoboticsI2cGyro gyro = null;
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
-        hwMap = ahwMap;
+        HardwareMap hwMap = ahwMap;
 
         //motor init
         tLeftDT   = hwMap.get(DcMotor.class, "tLeftDT");
