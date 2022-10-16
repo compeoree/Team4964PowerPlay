@@ -43,28 +43,37 @@ public class Bot {
         opMode.telemetry.addLine("Gyro Calibrated");
         opMode.telemetry.update();
 
-
+        //motors init
+        tRightDT.setDirection(DcMotor.Direction.REVERSE);
+        bRightDT.setDirection(DcMotor.Direction.REVERSE);
 
         bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         tLeftDT.setPower(0);
         bLeftDT.setPower(0);
         tRightDT.setPower(0);
         bRightDT.setPower(0);
         Lift.setPower(0);
-        //fix later\\
+        //fix later
         Claw.setPosition(0.4);
 
-        opMode.telemetry.addLine("Initialization Complete");
+        opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
 
 
@@ -73,15 +82,15 @@ public class Bot {
     //driving using only Mecanum strafe
     public static void strafeDrive (float distanceX, float distanceY, double speed, LinearOpMode opMode)
     {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + ( distanceX + 2 * ( distanceY *    distanceX   ));
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + (-distanceX + 2 * ( distanceY * ( -distanceX ) ));
-        double tRightPower = tRightDT.getCurrentPosition() + (-distanceX + 2 * ( distanceY * ( -distanceX ) ));
-        double bRightPower = bRightDT.getCurrentPosition() + ( distanceX + 2 * ( distanceY *    distanceX   ));
+        double tLeftPower  = tLeftDT.getCurrentPosition()  + ( distanceX + 2 * (  distanceY * distanceX ));
+        double bLeftPower  = bLeftDT.getCurrentPosition()  + ( distanceX + 2 * (  distanceY * distanceX ));
+        double tRightPower = tRightDT.getCurrentPosition() + ( distanceX + 2 * ( -distanceY * distanceX ));
+        double bRightPower = bRightDT.getCurrentPosition() + ( distanceX + 2 * ( -distanceY * distanceX ));
 
         tLeftDT.setPower(speed);
         bLeftDT.setPower(speed);
-        tLeftDT.setPower(speed);
-        bLeftDT.setPower(speed);
+        tRightDT.setPower(speed);
+        bRightDT.setPower(speed);
 
         speed = Range.clip(Math.abs(speed), 0.0, 1.0);
         tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
