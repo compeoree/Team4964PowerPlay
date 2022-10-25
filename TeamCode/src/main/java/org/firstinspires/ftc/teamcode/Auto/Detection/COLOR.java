@@ -43,4 +43,6 @@ public class COLOR {
     public int getWhite(){
         return (red + green + blue);
     }
+
+
 }

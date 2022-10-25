@@ -10,6 +10,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Bot {
@@ -20,7 +26,7 @@ public class Bot {
     public static DcMotor Lift     = null;
     public static Servo   Claw     = null;
     public static ModernRoboticsI2cGyro gyro = null;
-
+    public static OpenCvCamera Cam = null;
 
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
@@ -42,6 +48,9 @@ public class Bot {
         while(gyro.isCalibrating());
         opMode.telemetry.addLine("Gyro Calibrated");
         opMode.telemetry.update();
+
+        //cam init
+
 
         //motors init
         tRightDT.setDirection(DcMotor.Direction.REVERSE);
