@@ -44,7 +44,7 @@ public class Bot {
 
 
         //motors init
-        tRightDT.setDirection(DcMotor.Direction.REVERSE);
+        tLeftDT.setDirection(DcMotor.Direction.REVERSE);
         bRightDT.setDirection(DcMotor.Direction.REVERSE);
 
         bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

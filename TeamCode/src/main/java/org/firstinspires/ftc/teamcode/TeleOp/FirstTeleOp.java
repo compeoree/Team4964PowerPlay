@@ -34,9 +34,9 @@ public class FirstTeleOp extends OpMode {
         double turn = gamepad1.right_stick_x;
 
         double tLeftPower  =  /*-turn +*/ -horizontal + 2 * (  vertical *  -horizontal );
-        double bLeftPower  =  /*turn +*/   horizontal + 2 * (  vertical *   horizontal );
+        double bLeftPower  =  /*turn +*/   horizontal + 2 * (  -vertical *   horizontal );
         double tRightPower =  /*turn +*/   horizontal + 2 * ( -vertical *   horizontal );
-        double bRightPower =  /*-turn +*/ -horizontal + 2 * ( -vertical *  -horizontal );
+        double bRightPower =  /*-turn +*/ -horizontal + 2 * ( vertical *  -horizontal );
 
         Bot.tLeftDT.setPower( tLeftPower );
         Bot.bLeftDT.setPower( bLeftPower );
