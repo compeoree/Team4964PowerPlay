@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
 
 
-@Autonomous(name= "RouxParkingAuto")
-public class ParkingAutoRogue extends LinearOpMode {
+@Autonomous(name= "Right Parking Auto")
+public class ParkingAutoRight extends LinearOpMode {
 
     Bot robot = new Bot();
     Variables var = new Variables();
@@ -29,9 +29,9 @@ public class ParkingAutoRogue extends LinearOpMode {
         waitForStart();
 
         ObjectDetector.POSITIONS position = detector.getDecision();
-        robot.strafeDrive(40, 0, 0.7, this);
+        robot.strafeDrive(-40, 0, 0.7, this);
         robot.strafeDrive(0,70, 0.7, this);
-        robot.strafeDrive(39, 0, 0.7, this);
+        robot.strafeDrive(-39, 0, 0.7, this);
         // getting into position to drop cone
         robot.Lift.setTargetPosition(var.Lvl_Tall);
         robot.strafeDrive(0, 4, 0.7, this);
@@ -39,18 +39,17 @@ public class ParkingAutoRogue extends LinearOpMode {
         robot.strafeDrive(0, -4, 0.7, this);
         robot.Lift.setTargetPosition(var.Lvl_Ground);
         robot.Claw.setPosition(0);
-        robot.strafeDrive(-30, 0, 0.7, this);
+        robot.strafeDrive(30, 0, 0.7, this);
         robot.strafeDrive(0, 65, 0.7, this);
         // make the decision
         switch (position) {
             case POS1:
                 break;
             case POS2:
-                robot.strafeDrive(-55, 0, 0.7, this);
+                robot.strafeDrive(55, 0, 0.7, this);
                 break;
             case POS3:
-                robot.strafeDrive(-112, 0, 0.7, this);
+                robot.strafeDrive(112, 0, 0.7, this);
         }
-
     }
 }
