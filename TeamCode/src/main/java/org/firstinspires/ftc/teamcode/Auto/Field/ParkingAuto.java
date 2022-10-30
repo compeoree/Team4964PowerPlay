@@ -26,11 +26,12 @@ public class ParkingAuto extends LinearOpMode {
 
         waitForStart();
 
-        //move forward and scan cone
+        //scan cone
         //strafe left
         //move forward
         //strafe right
         //put cone on pole
+        //make decision
         //move to the correct position indicated by cone scanned
     }
 }

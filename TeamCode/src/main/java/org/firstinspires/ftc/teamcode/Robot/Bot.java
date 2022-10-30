@@ -19,11 +19,8 @@ public class Bot {
     public static Servo   Claw     = null;
     public static ModernRoboticsI2cGyro gyro = null;
 
-    //lift levels
-
-
     public static final float conversion = 1; // conversion of encoder rotations to centimetres !!EDIT!!
-    public static final float tileconversion = 1; // conversion of encoder rotations to tiles tileconversion !!EDIT!!
+    public static final float tileconversion = 1; // conversion of encoder rotations to tiles !!EDIT!!
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
