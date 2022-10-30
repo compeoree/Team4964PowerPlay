@@ -31,16 +31,18 @@ public class FirstTeleOp extends OpMode {
     void Drive(){
         double vertical   = gamepad1.left_stick_y;
         double horizontal = gamepad1.left_stick_x;
+        double turn = gamepad1.right_stick_x;
 
-        double tLeftPower  =  -horizontal + 2 * ( vertical *  -horizontal );
-        double bLeftPower  =  horizontal + 2 * (  vertical *  horizontal );
-        double tRightPower =  horizontal + 2 * (  -vertical *  horizontal );
-        double bRightPower =  -horizontal + 2 * ( -vertical *  -horizontal );
+        double tLeftPower  =  /*-turn +*/ -horizontal + 2 * (  vertical *  -horizontal );
+        double bLeftPower  =  /*turn +*/   horizontal + 2 * (  vertical *   horizontal );
+        double tRightPower =  /*turn +*/   horizontal + 2 * ( -vertical *   horizontal );
+        double bRightPower =  /*-turn +*/ -horizontal + 2 * ( -vertical *  -horizontal );
 
         Bot.tLeftDT.setPower( tLeftPower );
         Bot.bLeftDT.setPower( bLeftPower );
         Bot.tRightDT.setPower(tRightPower);
         Bot.bRightDT.setPower(bRightPower);
+
 
         telemetry.addLine("top left encoder counts: " + Bot.tLeftDT.getCurrentPosition());
         telemetry.addLine("bottom left encoder counts: " + Bot.bLeftDT.getCurrentPosition());
