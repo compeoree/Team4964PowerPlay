@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,7 +16,7 @@ public class Bot {
     public static DcMotor bRightDT = null;
     public static DcMotor Lift     = null;
     public static Servo   Claw     = null;
-    public static ModernRoboticsI2cGyro gyro = null;
+
 
     public static final float conversion = 1; // conversion of encoder rotations to centimetres !!EDIT!!
     public static final float tileconversion = 1; // conversion of encoder rotations to tiles !!EDIT!!
@@ -35,10 +34,7 @@ public class Bot {
 
 
         //gyro init
-        gyro = hwMap.get(ModernRoboticsI2cGyro.class,"gyro");
-        gyro.initialize();
-        gyro.calibrate();
-        while(gyro.isCalibrating());
+
         opMode.telemetry.addLine("Gyro Calibrated");
         opMode.telemetry.update();
 
