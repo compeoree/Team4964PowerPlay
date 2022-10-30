@@ -86,26 +86,29 @@ public class Bot {
     //driving using only Mecanum strafe
     public static void strafeDrive (float distanceX, float distanceY, double speed, LinearOpMode opMode)
     {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + conversion*( distanceX + 2 * ( -distanceY * distanceX ));
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + conversion*( distanceX + 2 * (  distanceY * distanceX ));
-        double tRightPower = tRightDT.getCurrentPosition() + conversion*( distanceX + 2 * ( distanceY * distanceX ));
-        double bRightPower = bRightDT.getCurrentPosition() + conversion*( distanceX + 2 * ( -distanceY * distanceX ));
+        // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
+        if (opMode.opModeIsActive()) {
+            double tLeftPower = tLeftDT.getCurrentPosition() + conversion * (distanceX + 2 * (-distanceY * distanceX));
+            double bLeftPower = bLeftDT.getCurrentPosition() + conversion * (distanceX + 2 * (distanceY * distanceX));
+            double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceX + 2 * (distanceY * distanceX));
+            double bRightPower = bRightDT.getCurrentPosition() + conversion * (distanceX + 2 * (-distanceY * distanceX));
 
-        tLeftDT.setPower(speed);
-        bLeftDT.setPower(speed);
-        tRightDT.setPower(speed);
-        bRightDT.setPower(speed);
+            tLeftDT.setPower(speed);
+            bLeftDT.setPower(speed);
+            tRightDT.setPower(speed);
+            bRightDT.setPower(speed);
 
-        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        tLeftDT.setTargetPosition( (int)tLeftPower);
-        bLeftDT.setTargetPosition( (int)bLeftPower);
-        tRightDT.setTargetPosition((int)tRightPower);
-        bRightDT.setTargetPosition((int)bRightPower);
+            tLeftDT.setTargetPosition((int) tLeftPower);
+            bLeftDT.setTargetPosition((int) bLeftPower);
+            tRightDT.setTargetPosition((int) tRightPower);
+            bRightDT.setTargetPosition((int) bRightPower);
+        }
 
     }
 
