@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.Tests;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,42 +8,27 @@ import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
 
 
-@TeleOp(name="FirstTeleOp")
+@TeleOp(name="Lift and Servo test")
 
-public class FirstTeleOp extends OpMode {
+public class LiftnServoTest extends OpMode {
 
     Bot robot = null;
     Variables var = null;
-
+    boolean set_mode = false;
 
     @Override
-    public void init() {
+    public  void  init(){
         robot = new Bot();
         var = new Variables();
-        robot.init(hardwareMap,this);
+        robot.init(hardwareMap, this);
     }
 
     public void loop(){
-        Drive();
-        Controls();
+        Lift();
+        Servo();
     }
 
-    void Drive(){
-        double vertical   = gamepad1.left_stick_y;
-        double horizontal = gamepad1.left_stick_x;
-
-        double tLeftPower  =  horizontal + 2 * ( -vertical *  horizontal );
-        double bLeftPower  =  horizontal + 2 * (  vertical *  horizontal );
-        double tRightPower =  horizontal + 2 * (  vertical *  horizontal );
-        double bRightPower =  horizontal + 2 * ( -vertical *  horizontal );
-
-        Bot.tLeftDT.setPower( tLeftPower );
-        Bot.bLeftDT.setPower( bLeftPower );
-        Bot.tRightDT.setPower(tRightPower);
-        Bot.bRightDT.setPower(bRightPower);
-    }
-
-    void Controls(){
+    void Lift(){
         float height = gamepad2.left_stick_y;
         boolean dpad_left  = gamepad2.dpad_left,
                 dpad_up    = gamepad2.dpad_up,
@@ -66,10 +51,16 @@ public class FirstTeleOp extends OpMode {
         else {
             Bot.Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             Bot.Lift.setPower(height);
+            telemetry.addLine("lift position " + Bot.Lift.getCurrentPosition());
         }
+
     }
-    
+
+    void Servo(){
+        float open = gamepad2.right_trigger,
+              close = gamepad2.left_trigger;
+        Bot.Claw.setPosition(Bot.Claw.getPosition() + open - close);
+        telemetry.addLine("claw position " + Bot.Claw.getPosition());
+    }
 
 }
-
-
