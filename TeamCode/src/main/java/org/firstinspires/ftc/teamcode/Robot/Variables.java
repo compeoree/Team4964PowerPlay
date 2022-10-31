@@ -5,4 +5,5 @@ public class Variables  {
             Lvl_Short  = 3850,
             Lvl_Mid    = 6250,
             Lvl_Tall   = 12890;
+    public boolean slo;
 }

@@ -29,15 +29,18 @@ public class FirstTeleOp extends OpMode {
     }
 
     void Drive(){
-        double vertical   = gamepad1.left_stick_y;
-        double horizontal = gamepad1.left_stick_x;
+        double vertical   =  gamepad1.left_stick_y;
+        double horizontal =  gamepad1.left_stick_x;
         double turn = gamepad1.right_stick_x;
 
-        double tLeftPower  =  /*-turn +*/ -horizontal + 2 * (  vertical *  -horizontal );
-        double bLeftPower  =  /*turn +*/   horizontal + 2 * (  -vertical *   horizontal );
-        double tRightPower =  /*turn +*/   horizontal + 2 * ( -vertical *   horizontal );
-        double bRightPower =  /*-turn +*/ -horizontal + 2 * ( vertical *  -horizontal );
+        float spd = 3;
+        if (gamepad1.a) { var.slo = !var.slo; }
+        if (var.slo) { spd = 9; } else { spd = 3; }
 
+        double tLeftPower  = (2 * (-vertical) + horizontal) / spd - turn;
+        double bLeftPower  = (2 * ( vertical) + horizontal) / spd + turn;
+        double tRightPower = (2 * ( vertical) + horizontal) / spd + turn;
+        double bRightPower = (2 * (-vertical) + horizontal) / spd - turn;
         Bot.tLeftDT.setPower( tLeftPower );
         Bot.bLeftDT.setPower( bLeftPower );
         Bot.tRightDT.setPower(tRightPower);

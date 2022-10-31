@@ -84,10 +84,10 @@ public class Bot {
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
-            double tLeftPower = tLeftDT.getCurrentPosition() + conversion * (distanceX + 2 * (-distanceY * distanceX));
-            double bLeftPower = bLeftDT.getCurrentPosition() + conversion * (distanceX + 2 * (distanceY * distanceX));
-            double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceX + 2 * (distanceY * distanceX));
-            double bRightPower = bRightDT.getCurrentPosition() + conversion * (distanceX + 2 * (-distanceY * distanceX));
+            double tLeftPower = tLeftDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
+            double bLeftPower = bLeftDT.getCurrentPosition() + conversion * (2 * (distanceY) + distanceX);
+            double tRightPower = tRightDT.getCurrentPosition() + conversion * (2 * (distanceY) + distanceX);
+            double bRightPower = bRightDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
 
             tLeftDT.setPower(speed);
             bLeftDT.setPower(speed);
