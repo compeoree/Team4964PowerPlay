@@ -26,6 +26,7 @@ public class FirstTeleOp extends OpMode {
     public void loop(){
         Drive();
         Controls();
+        Servo();
     }
 
     void Drive(){
@@ -88,6 +89,12 @@ public class FirstTeleOp extends OpMode {
             }
 
         }
+    }
+
+    void Servo(){
+        float close = gamepad2.left_trigger;
+        Bot.Claw.setPosition(close);
+        telemetry.addLine("claw position " + Bot.Claw.getPosition());
     }
     
 
