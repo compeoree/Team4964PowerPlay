@@ -18,8 +18,8 @@ public class Bot {
     public static Servo   Claw     = null;
 
 
-    public static final float conversion = 1; // conversion of encoder rotations to centimetres !!EDIT!!
-    public static final float tileconversion = 1; // conversion of encoder rotations to tiles !!EDIT!!
+    public static final float conversion = 19.6666666666666666666666666f; // conversion of encoder rotations to centimetres
+    public static final float tileConversion = 1; // conversion of encoder rotations to tiles !!EDIT!!
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
@@ -84,9 +84,9 @@ public class Bot {
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
-            double tLeftPower = tLeftDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
-            double bLeftPower = bLeftDT.getCurrentPosition() + conversion * (2 * (distanceY) + distanceX);
-            double tRightPower = tRightDT.getCurrentPosition() + conversion * (2 * (distanceY) + distanceX);
+            double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
+            double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (2 * ( distanceY) + distanceX);
+            double tRightPower = tRightDT.getCurrentPosition() + conversion * (2 * ( distanceY) + distanceX);
             double bRightPower = bRightDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
 
             tLeftDT.setPower(speed);
@@ -94,26 +94,27 @@ public class Bot {
             tRightDT.setPower(speed);
             bRightDT.setPower(speed);
 
+            tLeftDT.setTargetPosition((int) tLeftPower);
+            bLeftDT.setTargetPosition((int) bLeftPower);
+            tRightDT.setTargetPosition((int) tRightPower);
+            bRightDT.setTargetPosition((int) bRightPower);
+
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            tLeftDT.setTargetPosition((int) tLeftPower);
-            bLeftDT.setTargetPosition((int) bLeftPower);
-            tRightDT.setTargetPosition((int) tRightPower);
-            bRightDT.setTargetPosition((int) bRightPower);
         }
 
     }
 
     public static void strafeDrive (float distanceX, float distanceY, double speed, boolean tiles, LinearOpMode opMode)
     {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileconversion*( distanceX + 2 * (  distanceY * distanceX ));
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileconversion*( distanceX + 2 * (  distanceY * distanceX ));
-        double tRightPower = tRightDT.getCurrentPosition() + tileconversion*( distanceX + 2 * ( -distanceY * distanceX ));
-        double bRightPower = bRightDT.getCurrentPosition() + tileconversion*( distanceX + 2 * ( -distanceY * distanceX ));
+        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileConversion * (2 * (-distanceY) + distanceX);
+        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileConversion * (2 * ( distanceY) + distanceX);
+        double tRightPower = tRightDT.getCurrentPosition() + tileConversion * (2 * ( distanceY) + distanceX);
+        double bRightPower = bRightDT.getCurrentPosition() + tileConversion * (2 * (-distanceY) + distanceX);
 
         tLeftDT.setPower(speed);
         bLeftDT.setPower(speed);

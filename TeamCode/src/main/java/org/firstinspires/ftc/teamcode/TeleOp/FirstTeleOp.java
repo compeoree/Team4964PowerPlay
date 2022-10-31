@@ -53,29 +53,40 @@ public class FirstTeleOp extends OpMode {
         telemetry.addLine("bottom right encoder counts: " + Bot.bRightDT.getCurrentPosition());
     }
 
+    public boolean assist;
+
     void Controls(){
         float height = gamepad2.left_stick_y;
+        int i = 1;
         boolean dpad_left  = gamepad2.dpad_left,
                 dpad_up    = gamepad2.dpad_up,
                 dpad_right = gamepad2.dpad_right,
                 dpad_down  = gamepad2.dpad_down;
 
-        if (dpad_down) {
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Bot.Lift.setTargetPosition(var.Lvl_Ground);
-        } else if (dpad_left) {
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Bot.Lift.setTargetPosition(var.Lvl_Short);
-        } else if (dpad_right) {
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Bot.Lift.setTargetPosition(var.Lvl_Mid);
-        } else if (dpad_up) {
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            Bot.Lift.setTargetPosition(var.Lvl_Tall);
-        }
-        else {
+        if(gamepad2.a){assist = !assist;}
+
+        if (!assist) {
             Bot.Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             Bot.Lift.setPower(height);
+            telemetry.addLine("lift position " + Bot.Lift.getCurrentPosition());
+            if (gamepad2.b) { telemetry.addLine("#" + i + " saved Lift position " + Bot.Lift.getCurrentPosition()); i += 1; }
+        }
+
+        else if (assist) {
+            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            if (dpad_down){
+                Bot.Lift.setTargetPosition(var.Lvl_Ground);
+            }
+            else if (dpad_left){
+                Bot.Lift.setTargetPosition(var.Lvl_Short);
+            }
+            else if (dpad_right){
+                Bot.Lift.setTargetPosition(var.Lvl_Mid);
+            }
+            else if (dpad_up) {
+                Bot.Lift.setTargetPosition(var.Lvl_Tall);
+            }
+
         }
     }
     
