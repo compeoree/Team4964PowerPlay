@@ -23,7 +23,7 @@ public class Bot {
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
-
+        Variables var = new Variables();
         //motor init
         tLeftDT   = hwMap.get(DcMotor.class, "FrontL");
         bLeftDT   = hwMap.get(DcMotor.class, "BackL");
@@ -71,7 +71,7 @@ public class Bot {
         bRightDT.setPower(0);
         Lift.setPower(0);
         //fix later
-        Claw.setPosition(0.4);
+        Claw.setPosition(var.claw_idle);
 
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
