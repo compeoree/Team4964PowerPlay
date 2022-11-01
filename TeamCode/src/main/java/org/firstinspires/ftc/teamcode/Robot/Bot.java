@@ -4,9 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
-
 
 
 public class Bot {
@@ -15,7 +13,7 @@ public class Bot {
     public static DcMotor tRightDT = null;
     public static DcMotor bRightDT = null;
     public static DcMotor Lift     = null;
-    public static Servo   Claw     = null;
+    public static DcMotor Claw     = null;
 
 
     public static final float conversion = 19.6666666666666666666666666f; // conversion of encoder rotations to centimetres
@@ -30,7 +28,7 @@ public class Bot {
         tRightDT  = hwMap.get(DcMotor.class, "FrontR");
         bRightDT  = hwMap.get(DcMotor.class, "BackR");
         Lift      = hwMap.get(DcMotor.class, "lift"    );
-        Claw      = hwMap.get(Servo.class,   "claw"    );
+        Claw      = hwMap.get(DcMotor.class,   "claw"    );
 
 
         //gyro init
@@ -51,6 +49,7 @@ public class Bot {
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -58,7 +57,7 @@ public class Bot {
         tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
+        Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -70,8 +69,7 @@ public class Bot {
         tRightDT.setPower(0);
         bRightDT.setPower(0);
         Lift.setPower(0);
-        //fix later
-        Claw.setPosition(var.claw_idle);
+        Claw.setPower(0);
 
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
@@ -84,10 +82,10 @@ public class Bot {
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
-            double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
-            double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (2 * ( distanceY) + distanceX);
-            double tRightPower = tRightDT.getCurrentPosition() + conversion * (2 * ( distanceY) + distanceX);
-            double bRightPower = bRightDT.getCurrentPosition() + conversion * (2 * (-distanceY) + distanceX);
+            double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
+            double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
+            double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
+            double bRightPower = bRightDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
 
             tLeftDT.setPower(speed);
             bLeftDT.setPower(speed);
@@ -111,10 +109,10 @@ public class Bot {
 
     public static void strafeDrive (float distanceX, float distanceY, double speed, boolean tiles, LinearOpMode opMode)
     {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileConversion * (2 * (-distanceY) + distanceX);
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileConversion * (2 * ( distanceY) + distanceX);
-        double tRightPower = tRightDT.getCurrentPosition() + tileConversion * (2 * ( distanceY) + distanceX);
-        double bRightPower = bRightDT.getCurrentPosition() + tileConversion * (2 * (-distanceY) + distanceX);
+        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileConversion * (distanceY +  distanceX);
+        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileConversion * (distanceY + -distanceX);
+        double tRightPower = tRightDT.getCurrentPosition() + tileConversion * (distanceY + -distanceX);
+        double bRightPower = bRightDT.getCurrentPosition() + tileConversion * (distanceY +  distanceX);
 
         tLeftDT.setPower(speed);
         bLeftDT.setPower(speed);

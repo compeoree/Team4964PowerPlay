@@ -35,10 +35,10 @@ public class ParkingAutoRight extends LinearOpMode {
         // getting into position to drop cone
         robot.Lift.setTargetPosition(var.Lvl_Tall);
         robot.strafeDrive(0, 4, 0.7, this);
-        robot.Claw.setPosition(1);
+        robot.Claw.setTargetPosition(var.claw_open);
         robot.strafeDrive(0, -4, 0.7, this);
         robot.Lift.setTargetPosition(var.Lvl_Ground);
-        robot.Claw.setPosition(0);
+        robot.Claw.setTargetPosition(var.claw_zero);
         robot.strafeDrive(30, 0, 0.7, this);
         robot.strafeDrive(0, 65, 0.7, this);
         // make the decision

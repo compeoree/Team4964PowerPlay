@@ -30,18 +30,18 @@ public class FirstTeleOp extends OpMode {
     }
 
     void Drive(){
-        double vertical   =  gamepad1.left_stick_y;
-        double horizontal =  gamepad1.left_stick_x;
-        double turn = gamepad1.right_stick_x;
+        double vertical   =   gamepad1.left_stick_y;
+        double horizontal =  -gamepad1.left_stick_x;
+        double turn = -gamepad1.right_stick_x;
 
         float spd = 3;
         if (gamepad1.a) { var.slo = !var.slo; }
         if (var.slo) { spd = 9; } else { spd = 3; }
 
-        double tLeftPower  = (2 * (-vertical) + horizontal) / spd - turn;
-        double bLeftPower  = (2 * ( vertical) + horizontal) / spd + turn;
-        double tRightPower = (2 * ( vertical) + horizontal) / spd + turn;
-        double bRightPower = (2 * (-vertical) + horizontal) / spd - turn;
+        double tLeftPower  = (vertical + horizontal + turn) / spd ;
+        double bLeftPower  = (vertical - horizontal + turn) / spd ;
+        double tRightPower = (vertical + horizontal - turn) / spd ;
+        double bRightPower = (vertical - horizontal - turn) / spd ;
         Bot.tLeftDT.setPower( tLeftPower );
         Bot.bLeftDT.setPower( bLeftPower );
         Bot.tRightDT.setPower(tRightPower);
@@ -93,8 +93,8 @@ public class FirstTeleOp extends OpMode {
 
     void Servo(){
         float close = gamepad2.left_trigger;
-        Bot.Claw.setPosition(close);
-        telemetry.addLine("claw position " + Bot.Claw.getPosition());
+        Bot.Claw.setTargetPosition((int)close*100);
+        telemetry.addLine("claw position " + Bot.Claw.getCurrentPosition());
     }
     
 

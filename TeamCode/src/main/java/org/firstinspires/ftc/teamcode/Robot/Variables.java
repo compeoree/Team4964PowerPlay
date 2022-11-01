@@ -6,7 +6,7 @@ public class Variables  {
             Lvl_Mid    = -2625,
             Lvl_Tall   = -3225;
     public boolean slo;
-    public float claw_idle = 1f,
-            claw_open = 0.58f,
-            claw_cone = 0.58f;
+    public int claw_zero = 1,
+            claw_open = 40,
+            claw_cone = 50;
 }
