@@ -81,8 +81,8 @@ public class ObjectDetector {
         POSITIONS position = POSITIONS.POS3;
 
         int leftValue   = cone.getWhite();
-        int middleValue = cone.getBlue();
-        int rightValue  = cone.getRed(); //Ensure getBlack works instead of getdBlue
+        int middleValue = cone.getdBlue();
+        int rightValue  = cone.getRed();
 
         if(leftValue > middleValue && leftValue > rightValue){
             position = POSITIONS.POS1;

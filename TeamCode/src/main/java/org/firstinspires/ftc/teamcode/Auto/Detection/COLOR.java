@@ -40,9 +40,7 @@ public class COLOR {
     public int getdBlue(){
         return -(green + red); // this makes a dark blue value
     }
-    public int getWhite(){
-        return (red + green + blue);
-    }
+    public int getWhite(){return (-((255 * 3) - (green + blue + red)));}
 
 
 }
