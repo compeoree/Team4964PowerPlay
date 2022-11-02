@@ -69,9 +69,9 @@ public class LiftnServoTest extends OpMode {
     }
 
     void Servo(){
-        float close = gamepad2.left_trigger;
         int i = 1;
-        Bot.Claw.setTargetPosition((int)close*100);
+        if (gamepad2.right_bumper){Bot.Claw.setTargetPosition(Bot.Claw.getCurrentPosition() + 1);}
+        else if (gamepad2.left_bumper){Bot.Claw.setTargetPosition(Bot.Claw.getCurrentPosition() - 1);}
         if (gamepad2.x) { telemetry.addLine("#" + i + " saved claw position " + Bot.Claw.getCurrentPosition()); i += 1; }
         telemetry.addLine("claw position " + Bot.Claw.getCurrentPosition());
     }
