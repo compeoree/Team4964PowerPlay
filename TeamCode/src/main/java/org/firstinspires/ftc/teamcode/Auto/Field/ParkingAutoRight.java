@@ -36,6 +36,7 @@ public class ParkingAutoRight extends LinearOpMode {
         robot.Lift.setTargetPosition(var.Lvl_Tall);
         robot.strafeDrive(0, 4, 0.7, this);
         robot.Claw.setTargetPosition(var.claw_open);
+        robot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.strafeDrive(0, -4, 0.7, this);
         robot.Lift.setTargetPosition(var.Lvl_Ground);
         robot.Claw.setTargetPosition(var.claw_zero);

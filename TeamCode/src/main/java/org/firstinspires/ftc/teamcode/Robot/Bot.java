@@ -49,7 +49,6 @@ public class Bot {
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -57,7 +56,7 @@ public class Bot {
         tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

@@ -74,6 +74,7 @@ public class LiftnServoTest extends OpMode {
         else if (gamepad2.left_bumper){Bot.Claw.setTargetPosition(Bot.Claw.getCurrentPosition() - 1);}
         if (gamepad2.x) { telemetry.addLine("#" + i + " saved claw position " + Bot.Claw.getCurrentPosition()); i += 1; }
         telemetry.addLine("claw position " + Bot.Claw.getCurrentPosition());
+        robot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 }
