@@ -51,7 +51,7 @@ public class teleOP extends OpMode {
 
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
         tLeftDT.setDirection(DcMotor.Direction.FORWARD);
-        bRightDT.setDirection(DcMotor.Direction.FORWARD);
+        bRightDT.setDirection(DcMotor.Direction.REVERSE);
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
         Lift.setDirection(DcMotor.Direction.FORWARD);
         Claw.setDirection(DcMotor.Direction.FORWARD);
@@ -183,9 +183,9 @@ public class teleOP extends OpMode {
 
 
         //lift code
-        if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_down) {
             Lift.setPower(.5);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.dpad_up) {
             Lift.setPower(-.5);
         }else{
             Lift.setPower(0);
@@ -193,15 +193,18 @@ public class teleOP extends OpMode {
 
 
         //wormhole in
-        if (gamepad2.b){
-            Claw.setPower(.4);
-
-
-
-        }else if (gamepad2.x){
-            Claw.setPower(-.4);
-
-
+        if (gamepad2.b) {
+            if (Claw.getCurrentPosition() <= 0) {
+                Claw.setPower(0.4);
+            }else {
+                Claw.setPower(0);
+            }
+        }else if (gamepad2.x) {
+            if (Claw.getCurrentPosition() >= -20) {
+                Claw.setPower(-.4);
+            } else {
+                Claw.setPower(0);
+            }
         }else {
             Claw.setPower(0);
 
