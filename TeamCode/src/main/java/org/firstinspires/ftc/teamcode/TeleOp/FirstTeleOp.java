@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Robot.Variables;
 
 
 @TeleOp(name="FirstTeleOp")
-
+@Disabled
 public class FirstTeleOp extends OpMode {
 
     Bot robot = null;
@@ -35,7 +36,10 @@ public class FirstTeleOp extends OpMode {
         double turn = -gamepad1.right_stick_x;
 
         float spd = 3;
-        if (gamepad1.a) { var.slo = !var.slo; }
+        if (gamepad1.a && var.btnlock) {
+            var.slo = !var.slo;
+        }
+
         if (var.slo) { spd = 9; } else { spd = 3; }
 
         double tLeftPower  = (vertical + horizontal + turn) / spd ;
