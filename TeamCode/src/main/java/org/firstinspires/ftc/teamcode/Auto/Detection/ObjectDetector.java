@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Auto.Detection;
 
 
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -76,7 +77,7 @@ public class ObjectDetector {
         POS1, POS2, POS3
     }
 
-    public POSITIONS getDecision() {
+    public POSITIONS getDecision(LinearOpMode opMode) {
 
         POSITIONS position = POSITIONS.POS3;
 
@@ -86,10 +87,16 @@ public class ObjectDetector {
 
         if(leftValue > middleValue && leftValue > rightValue){
             position = POSITIONS.POS1;
+            opMode.telemetry.addData("decision:", position);
         }
         else if(middleValue > leftValue && middleValue > rightValue){
             position = POSITIONS.POS2;
+            opMode.telemetry.addData("decision:", position);
         }
+        else{
+            opMode.telemetry.addData("decision:", position);
+        }
+
 
         if (show_value){
 

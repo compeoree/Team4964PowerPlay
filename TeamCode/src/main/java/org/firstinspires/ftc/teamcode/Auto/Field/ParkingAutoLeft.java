@@ -17,7 +17,7 @@ public class ParkingAutoLeft extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ObjectDetector detector = new ObjectDetector(this, false,false);
+        ObjectDetector detector = new ObjectDetector(this, false, false);
 
         robot.init(hardwareMap, this);
 
@@ -28,29 +28,47 @@ public class ParkingAutoLeft extends LinearOpMode {
 
         waitForStart();
 
-        ObjectDetector.POSITIONS position = detector.getDecision();
-        robot.strafeDrive(40, 0, 0.7, this);
-        robot.strafeDrive(0,70, 0.7, this);
-        robot.strafeDrive(39, 0, 0.7, this);
+        ObjectDetector.POSITIONS position = detector.getDecision(this);
+        //robot.strafeDrive(-40, 0, 0.7, this);
+        //robot.strafeDrive(0,70, 0.7, this);
+        // robot.strafeDrive(-39, 0, 0.7, this);
+        Bot.strafeToPosition(-40,.7);
+        Bot.gyroDrive(.7, 70, 70, 70, 70, 0, this);
+        Bot.strafeToPosition(39,.7);
+
+
         // getting into position to drop cone
         robot.Lift.setTargetPosition(var.Lvl_Tall);
-        robot.strafeDrive(0, 4, 0.7, this);
+        sleep(1000);
+        //robot.strafeDrive(0, 4, 0.7, this);
+        Bot.gyroDrive(.7, 4, 4, 4, 4, 0, this);
+
         robot.Claw.setTargetPosition(var.claw_open);
-        robot.strafeDrive(0, -4, 0.7, this);
+        sleep(500);
+        //robot.strafeDrive(0, -4, 0.7, this);
+        Bot.gyroDrive(.7, -4, -4, -4, -4, 0, this);
         robot.Lift.setTargetPosition(var.Lvl_Ground);
         robot.Claw.setTargetPosition(var.claw_zero);
-        robot.strafeDrive(-30, 0, 0.7, this);
-        robot.strafeDrive(0, 65, 0.7, this);
+        sleep(1000);
+        //robot.strafeDrive(30, 0, 0.7, this);
+        //robot.strafeDrive(0, 65, 0.7, this);
+        Bot.strafeToPosition(-30,.7);
+        Bot.gyroDrive(.7, 65, 65, 65, 65, 0, this);
+
+
         // make the decision
         switch (position) {
             case POS1:
-                robot.strafeDrive(-112, 0, 0.7, this);
+                break;
             case POS2:
-                robot.strafeDrive(-55, 0, 0.7, this);
+                //robot.strafeDrive(55, 0, 0.7, this);
+                Bot.strafeToPosition(-55,.7);
+
                 break;
             case POS3:
-                break;
-        }
+                //robot.strafeDrive(112, 0, 0.7, this);
+                Bot.strafeToPosition(-112,.7);
 
+        }
     }
 }
