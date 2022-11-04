@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="teleop")
+
+@TeleOp(name="Teleop")
     public class TylerTeleop extends OpMode {
 
 
@@ -168,6 +169,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
             backleft.setPower(leftBackPower);
             frontright.setPower(rightFrontPower);
             backright.setPower(rightBackPower);
+
+            telemetry.addLine("top left encoder counts: " + frontleft.getCurrentPosition());
+            telemetry.addLine("bottom left encoder counts: " + backleft.getCurrentPosition());
+            telemetry.addLine("top right encoder counts: " + frontright.getCurrentPosition());
+            telemetry.addLine("bottom right encoder counts: " + backright.getCurrentPosition());
             //Drive Train Code
 
 

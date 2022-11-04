@@ -16,8 +16,8 @@ public class Bot {
     public static DcMotor Claw     = null;
 
 
-    public static final float conversion = 19.6666666666666666666666666f; // conversion of encoder rotations to centimetres
-    public static final float tileConversion = 1; // conversion of encoder rotations to tiles !!EDIT!!
+    public static final double conversion = Variables.conversion; // var.conversion of encoder rotations to centimetres
+    public static final double tileConversion = conversion * 60; // var.conversion of encoder rotations to tiles !!EDIT!!
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
@@ -81,6 +81,10 @@ public class Bot {
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
+
+            distanceX = (float) (1 * Math.pow(distanceX, 3));
+            distanceY = (float) (1 * Math.pow(distanceY, 3));
+
             double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
             double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
             double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceY + -distanceX);

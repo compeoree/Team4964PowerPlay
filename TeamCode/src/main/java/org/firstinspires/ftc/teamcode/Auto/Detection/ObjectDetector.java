@@ -80,7 +80,7 @@ public class ObjectDetector {
 
         POSITIONS position = POSITIONS.POS3;
 
-        int leftValue   = cone.getWhite();
+        int leftValue   = -cone.getBlack();
         int middleValue = cone.getdBlue();
         int rightValue  = cone.getRed();
 

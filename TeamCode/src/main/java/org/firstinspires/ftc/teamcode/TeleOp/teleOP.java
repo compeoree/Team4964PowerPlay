@@ -1,15 +1,8 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.Robot.Bot;
 
 
 @TeleOp(name="teleOP")
@@ -107,9 +100,10 @@ public class teleOP extends OpMode {
     public void loop() {
 
         //Slow Mode Code for a and b keys
-        if (gamepad1.a == true) {
+        if (gamepad1.a) {
             speedMode = .4;
-        } else if (gamepad1.b == true) {
+        }
+        if (gamepad1.b) {
             speedMode = 1;
         }
         //Slow Mode Code for a and b keys
@@ -118,7 +112,7 @@ public class teleOP extends OpMode {
 
 
         //Slow Mode Code for bumpers
-        if (gamepad1.right_bumper == true && speedMode > .2) {
+        if (gamepad1.right_bumper && speedMode > .2) {
             speedMode -= .05;
         } else if (gamepad1.right_trigger >= .5 && speedMode < 2) {
             speedMode += .05;

@@ -8,9 +8,9 @@ import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
 
 
-@TeleOp(name="FirstTeleOp")
+@TeleOp(name="NewTeleOp")
 
-public class FirstTeleOp extends OpMode {
+public class NewTeleOp extends OpMode {
 
     Bot robot = null;
     Variables var = null;
@@ -40,8 +40,8 @@ public class FirstTeleOp extends OpMode {
 
         double tLeftPower  = (vertical + horizontal + turn) / spd ;
         double bLeftPower  = (vertical - horizontal + turn) / spd ;
-        double tRightPower = (vertical + horizontal - turn) / spd ;
-        double bRightPower = (vertical - horizontal - turn) / spd ;
+        double tRightPower = (vertical - horizontal - turn) / spd ;
+        double bRightPower = (vertical + horizontal - turn) / spd ;
         Bot.tLeftDT.setPower( tLeftPower );
         Bot.bLeftDT.setPower( bLeftPower );
         Bot.tRightDT.setPower(tRightPower);
@@ -97,10 +97,8 @@ public class FirstTeleOp extends OpMode {
         else if (gamepad2.left_bumper){Bot.Claw.setTargetPosition(Bot.Claw.getCurrentPosition() - 1);}
         if (gamepad2.x) { telemetry.addLine("#" + i + " saved claw position " + Bot.Claw.getCurrentPosition()); i += 1; }
         telemetry.addLine("claw position " + Bot.Claw.getCurrentPosition());
-        }
+    }
 
 
 
 }
-
-

@@ -43,14 +43,13 @@ public class ParkingAutoRight extends LinearOpMode {
         robot.strafeDrive(30, 0, 0.7, this);
         robot.strafeDrive(0, 65, 0.7, this);
         // make the decision
-        switch (position) {
-            case POS1:
-                break;
-            case POS2:
-                robot.strafeDrive(55, 0, 0.7, this);
-                break;
-            case POS3:
-                robot.strafeDrive(112, 0, 0.7, this);
+        switch (position) {case POS1:
+             break;
+             case POS2:
+                 robot.strafeDrive(55, 0, 0.7, this);
+                 break;
+                 case POS3:
+                     robot.strafeDrive(112, 0, 0.7, this);
         }
     }
 }
