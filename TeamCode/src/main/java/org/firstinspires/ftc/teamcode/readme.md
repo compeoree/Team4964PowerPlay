@@ -1,3 +1,9 @@
+## 4964 Customizations
+Follow the instructions at https://github.com/OpenFTC/EasyOpenCV to install OpenCV
+You may have to "Sync Project with Gradle Files" after cloning and opening the project for the first time.
+Install the library file to /FIRST folder on ControlHub or Android device (https://github.com/OpenFTC/OpenCV-Repackaged/raw/9a4d3d4bc001feffb3767842fa2de0c38a98883a/doc/native_libs/armeabi-v7a/libOpenCvAndroid453.so)
+
+
 ## TeamCode Module
 
 Welcome!

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -33,70 +35,115 @@ public class Bot {
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
         Variables var = new Variables();
-        tLeftDT   = hwMap.get(DcMotor.class, "FrontL");
-        bLeftDT   = hwMap.get(DcMotor.class, "BackL");
-        tRightDT  = hwMap.get(DcMotor.class, "FrontR");
-        bRightDT  = hwMap.get(DcMotor.class, "BackR");
-        Lift      = hwMap.get(DcMotor.class, "lift"    );
-        Claw      = hwMap.get(DcMotor.class,   "claw"    );
-        Gyro      = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+
+        // Init Front Left motor
+        try {
+            tLeftDT = hwMap.get(DcMotor.class, "FrontL");
+            tLeftDT.setDirection(DcMotor.Direction.FORWARD);
+            tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            tLeftDT.setPower(0);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("FrontL: Motor Error!");
+            opMode.telemetry.update();
+        }
+
+        // Init Back Left motor
+        try {
+            bLeftDT = hwMap.get(DcMotor.class, "BackL");
+            bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+            bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            bLeftDT.setPower(0);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("BackL: Motor Error!");
+            opMode.telemetry.update();
+        }
 
 
-        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
-        tLeftDT.setDirection(DcMotor.Direction.FORWARD);
-        bRightDT.setDirection(DcMotor.Direction.REVERSE);
-        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
-        Lift.setDirection(DcMotor.Direction.FORWARD);
-        Claw.setDirection(DcMotor.Direction.FORWARD);
+        // Init Front Right motor
+        try {
+            tRightDT = hwMap.get(DcMotor.class, "FrontR");
+            tRightDT.setDirection(DcMotor.Direction.FORWARD);
+            tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            tRightDT.setPower(0);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("FrontR: Motor Error!");
+            opMode.telemetry.update();
+        }
 
+        // Init Back Right motor
+        try {
+            bRightDT = hwMap.get(DcMotor.class, "BackR");
+            bRightDT.setDirection(DcMotor.Direction.REVERSE);
+            bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            bRightDT.setPower(0);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("BackR: Motor Error!");
+            opMode.telemetry.update();
+        }
 
+        // Init Lift motor
+        try {
+            Lift = hwMap.get(DcMotor.class, "lift"    );
+            Lift.setDirection(DcMotor.Direction.FORWARD);
+            Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            Lift.setPower(0);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("Lift: Motor Error!");
+            opMode.telemetry.update();
+        }
 
-        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Init Claw motor
+        try {
+            Claw = hwMap.get(DcMotor.class,   "claw"    );
+            Claw.setDirection(DcMotor.Direction.FORWARD);
+            Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            Claw.setPower(0);
+            Claw.setTargetPosition(var.claw_cone);
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("Lift: Motor Error!");
+            opMode.telemetry.update();
+        }
 
+        // Init Gyro
+        try {
+            Gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+            Gyro.calibrate();
+            int timeout = 60;
+            while (Gyro.isCalibrating() && --timeout > 0) {
+                sleep(50);
+            }
+            opMode.telemetry.addLine("Gyro Calibrated");
+            opMode.telemetry.update();
+        }
+        catch (IllegalArgumentException iae) {
+            opMode.telemetry.addLine("Gyro: Init Error! - Illegal Argument");
+            opMode.telemetry.update();
+        }
+        catch (InterruptedException ie) {
+            opMode.telemetry.addLine("Gyro: Init Error! - Interrupted");
+            opMode.telemetry.update();
+        }
 
-
-        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
-        bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-
-
-        bLeftDT.setPower(0);
-        tLeftDT.setPower(0);
-        bRightDT.setPower(0);
-        bLeftDT.setPower(0);
-        Lift.setPower(0);
-        Claw.setPower(0);
-
-        Claw.setTargetPosition(var.claw_cone);
-
-        Gyro.calibrate();
-        while (Gyro.isCalibrating()) ;
-        opMode.telemetry.addLine("Gyro Calibrated");
+        opMode.telemetry.addLine("Initialization Complete!");
         opMode.telemetry.update();
-
-
-        opMode.telemetry.addLine("Initialization Complete! ;) ");
-        opMode.telemetry.update();
-
 
     }
 

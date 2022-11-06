@@ -21,10 +21,14 @@ public class ParkingAutoLeft extends LinearOpMode {
 
         robot.init(hardwareMap, this);
 
-        robot.bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (robot.bLeftDT != null)
+            robot.bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (robot.tLeftDT != null)
+            robot.tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (robot.bRightDT != null)
+            robot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        if (robot.tRightDT != null)
+            robot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 

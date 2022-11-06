@@ -20,53 +20,28 @@ public class ObjectDetector {
 
     OpMode opMode;
     OpenCvCamera camera;
-
     CustomPipeline pipeline;
 
-
-
-    private final Point R_FRONT_LEFT_TL   = new Point(110,180);
-    private final Point R_FRONT_LEFT_BR   = new Point(160, 220);
-    private final Point R_FRONT_MIDDLE_TL = new Point(260, 180);
-    private final Point R_FRONT_MIDDLE_BR = new Point(310,  220);
-    private final Point R_FRONT_RIGHT_TL  = new Point(10, 180);
-    private final Point R_FRONT_RIGHT_BR  = new Point(51, 220);
-
-
-    private Point leftTL;
-    private Point leftBR;
-    private Point middleTL;
-    private Point middleBR;
-    private Point rightTL;
-    private Point rightBR;
-
+    private final Point DETECT_BOX_TL   = new Point(140,100); // 320x240, div 2, minus 20
+    private final Point DETECT_BOX_BR   = new Point(180, 140);
+    private final Scalar DETECT_BOX_COLOR = new Scalar(255, 0, 0);
+    private final int BOUNDING_BOX_THICKNESS = 3;
 
     private COLOR cone;
     private boolean show_value = true;
 
-
-    public ObjectDetector(OpMode op, boolean isFrontCAM, boolean isRed){
-
+    public ObjectDetector(OpMode op, boolean isFrontCAM, boolean isRed) {
         opMode = op;
 
         int cameraMonitorViewId = opMode.hardwareMap.appContext.getResources().getIdentifier(
                 "cameraMonitorViewId", "id", opMode.hardwareMap.appContext.getPackageName());
 
-        camera = OpenCvCameraFactory.getInstance().createWebcam(opMode.hardwareMap.get(WebcamName.class, "Webcam1"), cameraMonitorViewId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(opMode.hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
 
         pipeline = new CustomPipeline();
         camera.openCameraDevice();
         camera.setPipeline(pipeline);
         camera.startStreaming(320, 240, OpenCvCameraRotation.UPRIGHT); //Sets resolution and position of webcam
-
-
-            leftTL   = R_FRONT_LEFT_TL;
-            leftBR   = R_FRONT_LEFT_BR;
-            middleTL = R_FRONT_MIDDLE_TL;
-            middleBR = R_FRONT_MIDDLE_BR;
-            rightTL  = R_FRONT_RIGHT_TL;
-            rightBR  = R_FRONT_RIGHT_BR;
-
     }
 
     public void stopStreaming() {
@@ -77,10 +52,25 @@ public class ObjectDetector {
         POS1, POS2, POS3
     }
 
-    public POSITIONS getDecision(LinearOpMode opMode) {
-
+    public POSITIONS getDecision(OpMode opMode) {
         POSITIONS position = POSITIONS.POS3;
 
+        int r = cone.getRed();
+        int g = cone.getGreen();
+        int b = cone.getBlue();
+
+        if (r == 255)
+            position = POSITIONS.POS3;
+        if (b == 255)
+            position = POSITIONS.POS2;
+        if (g == 255)
+            position = POSITIONS.POS1;
+        /*if (r > 254 && (g < 70 && b < 70))
+            position = POSITIONS.POS3;
+        if (g > 254 && (r < 240 && b < 240))
+            position = POSITIONS.POS2;
+        if (b > 254 && (r < 240 && b < 140))
+            position = POSITIONS.POS2;
         int leftValue   = -cone.getBlack();
         int middleValue = cone.getdBlue();
         int rightValue  = cone.getRed();
@@ -95,15 +85,15 @@ public class ObjectDetector {
         }
         else{
             opMode.telemetry.addData("decision:", position);
-        }
+        }*/
 
 
         if (show_value){
-
-            opMode.telemetry.addData("Position: ", position);
-            opMode.telemetry.addData("Left Value: ", leftValue);
-            opMode.telemetry.addData("Middle Value: ", middleValue);
-            opMode.telemetry.addData("Right Value: ", rightValue);
+            opMode.telemetry.addLine("Position: " + position);
+            //opMode.telemetry.addData("Position: ", position);
+            //opMode.telemetry.addData("Left Value: ", leftValue);
+            //opMode.telemetry.addData("Middle Value: ", middleValue);
+            //opMode.telemetry.addData("Right Value: ", rightValue);
             opMode.telemetry.update();
         }
 
@@ -114,49 +104,44 @@ public class ObjectDetector {
 
         @Override
         public Mat processFrame(Mat input){
-
-
-            cone = getAverageColor(input, rightTL, rightBR);
-
-            int thickness = 3;
-            Scalar leftColor = new Scalar(255, 0, 0);
-            Scalar middleColor = new Scalar(255, 255, 255);
-            Scalar rightColor = new Scalar(0, 0, 255);
-
-            Imgproc.rectangle(input, leftTL, leftBR, leftColor, thickness);
-            Imgproc.rectangle(input, middleTL, middleBR, middleColor, thickness);
-            Imgproc.rectangle(input, rightTL, rightBR, rightColor, thickness);
-
+            cone = getAverageColor(input, DETECT_BOX_TL, DETECT_BOX_BR);
+            Imgproc.rectangle(input, DETECT_BOX_TL, DETECT_BOX_BR, DETECT_BOX_COLOR, BOUNDING_BOX_THICKNESS);
+            getDecision(opMode);
             //sendTelemetry();
-
             return input;
         }
 
         private COLOR getAverageColor(Mat mat, Point topLeft, Point bottomRight) {
-            int red = 0;
-            int green = 0;
-            int blue = 0;
-            int total = 0;
+            double red = 0;
+            double green = 0;
+            double blue = 0;
+            double max = 0;
 
-            for (int x = (int)topLeft.x; x < bottomRight.x; x++){
-                for (int y = (int)topLeft.y; y < bottomRight.y; y++){
-                    red += mat.get(y,x)[0];
-                    green += mat.get(y,x)[1];
-                    blue += mat.get(y,x)[2];
-                    total++;
+            for (int x = (int)topLeft.x; x < bottomRight.x; x++) {
+                for (int y = (int)topLeft.y; y < bottomRight.y; y++) {
+                    double[] pixel = mat.get(y,x);
+                    red += pixel[0];
+                    green += pixel[1];
+                    blue += pixel[2];
                 }
             }
 
-            red /= total;
-            green /= total;
-            blue /= total;
+            //double total = red + green + blue;
+            if (max < red)
+                max = red;
+            if (max < green)
+                max = green;
+            if (max < blue)
+                max = blue;
+            red = red / max * 255;
+            green = green / max * 255;
+            blue = blue / max * 255;
 
-            return new COLOR(red, green, blue);
+            return new COLOR((int)red, (int)green, (int)blue);
         }
 
         public void sendTelemetry() {
-            opMode.telemetry.addLine("determining... :" + " Blue " + cone.getBlue() + " White " + cone.getWhite() + " Red " + cone.getRed());
-
+            opMode.telemetry.addLine(" Blue " + cone.getBlue() + " Green " + cone.getGreen() + " Red " + cone.getRed() + " White " + cone.getWhite() + " Black " + cone.getBlack());
             opMode.telemetry.update();
         }
 

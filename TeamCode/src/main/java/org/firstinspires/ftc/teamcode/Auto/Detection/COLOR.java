@@ -6,7 +6,6 @@ public class COLOR {
     private int green = 0;
     private int blue = 0;
 
-
     public COLOR(int r, int g, int b){
         red = r;
         green = g;
@@ -35,12 +34,13 @@ public class COLOR {
         return blue;
     }
     public int getBlack() {
-        return (255 * 3) - (green + blue + red); //this makes a black value
+        return 255 - getWhite(); //this makes a black value
     }
     public int getdBlue(){
         return -(green + red); // this makes a dark blue value
     }
-    public int getWhite(){return (-((255 * 3) - (green + blue + red)));}
+    public int getWhite() {return ((green + blue + red) / (255 * 3)) * 255; }
 
+    // Should probably create a getPrimaryColor() function and convert to HSV space to calculate
 
 }
