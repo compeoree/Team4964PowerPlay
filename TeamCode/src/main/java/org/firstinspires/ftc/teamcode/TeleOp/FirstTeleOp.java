@@ -36,7 +36,7 @@ public class FirstTeleOp extends OpMode {
 
         float spd = 3;
         if (gamepad1.a) { var.slo = !var.slo; }
-        if (var.slo) { spd = 9; } else { spd = 3; }
+        if (var.slo) { spd = 9; }
 
         double tLeftPower  = (vertical + horizontal + turn) / spd ;
         double bLeftPower  = (vertical - horizontal + turn) / spd ;

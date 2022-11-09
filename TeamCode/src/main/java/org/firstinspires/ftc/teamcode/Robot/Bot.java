@@ -298,12 +298,13 @@ public class Bot {
          bRightDT.setPower(speed);
         //
         while ( tLeftDT.isBusy() &&  tRightDT.isBusy() &&  bLeftDT.isBusy() &&  bRightDT.isBusy()) {
+
         }
          tRightDT.setPower(0);
          tLeftDT.setPower(0);
          bRightDT.setPower(0);
          bLeftDT.setPower(0);
-        return;
+
     }
 
     public static double getError(double targetAngle) {

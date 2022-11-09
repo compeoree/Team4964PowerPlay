@@ -21,10 +21,10 @@ public class ParkingAutoRight extends LinearOpMode {
 
         robot.init(hardwareMap, this);
 
-        robot.bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 
@@ -38,17 +38,17 @@ public class ParkingAutoRight extends LinearOpMode {
 
 
         // getting into position to drop cone
-        robot.Lift.setTargetPosition(var.Lvl_Tall);
+        Bot.Lift.setTargetPosition(var.Lvl_Tall);
         sleep(1000);
         //robot.strafeDrive(0, 4, 0.7, this);
         Bot.gyroDrive(.7, 4,4,4,4,0,this);
 
-        robot.Claw.setTargetPosition(var.claw_open);
+        Bot.Claw.setTargetPosition(var.claw_open);
         sleep(500);
         //robot.strafeDrive(0, -4, 0.7, this);
         Bot.gyroDrive(.7, -4,-4,-4,-4,0,this);
-        robot.Lift.setTargetPosition(var.Lvl_Ground);
-        robot.Claw.setTargetPosition(var.claw_zero);
+        Bot.Lift.setTargetPosition(var.Lvl_Ground);
+        Bot.Claw.setTargetPosition(var.claw_zero);
         sleep(1000);
         //robot.strafeDrive(30, 0, 0.7, this);
         //robot.strafeDrive(0, 65, 0.7, this);
