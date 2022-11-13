@@ -17,7 +17,7 @@ public class ParkingAutoRight extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        ObjectDetector detector = new ObjectDetector(this, false,false);
+        ObjectDetector detector = new ObjectDetector(this, true,false);
 
         robot.init(hardwareMap, this);
 
