@@ -15,7 +15,8 @@ public class Bot {
     public static DcMotor bRightDT = null;
     public static DcMotor Lift     = null;
     public static DcMotor Claw     = null;
-    public static ModernRoboticsI2cGyro Gyro = null;
+
+    public static ModernRoboticsI2cGyro Gyro;
 
     static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
@@ -38,7 +39,7 @@ public class Bot {
         tRightDT  = hwMap.get(DcMotor.class, "FrontR");
         bRightDT  = hwMap.get(DcMotor.class, "BackR");
         Lift      = hwMap.get(DcMotor.class, "lift"    );
-        Claw      = hwMap.get(DcMotor.class,   "claw"    );
+        Claw      = hwMap.get(DcMotor.class, "claw"    );
         Gyro      = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
 
 
@@ -88,41 +89,46 @@ public class Bot {
 
         Claw.setTargetPosition(var.claw_cone);
 
-        Gyro.calibrate();
-        while (Gyro.isCalibrating()) ;
-        opMode.telemetry.addLine("Gyro Calibrated");
+
+
+
+
+
+        opMode.telemetry.addLine("Start Gyro");
         opMode.telemetry.update();
+        Gyro.calibrate();
+        while (Gyro.isCalibrating()){ opMode.telemetry.addLine("Gyro Calibrating"); }
+        opMode.telemetry.addData("Angle: ", Gyro.getIntegratedZValue());
+        opMode.telemetry.addLine("Gyro Calibrated");
 
 
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
 
+        opMode.telemetry.addData("Angle: ", Gyro.getIntegratedZValue());
+
 
     }
 
+
+
     //driving using only Mecanum strafe
-    public static void strafeDrive (float distanceX, float distanceY, double speed, LinearOpMode opMode)
+    public static void strafeDrive (float distance, double speed, LinearOpMode opMode)
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
 
-            distanceX = (float) (1 * Math.pow(distanceX, 3));
-            distanceY = (float) (1 * Math.pow(distanceY, 3));
+            distance = (float) (1 * Math.pow(distance, 3));
 
-            double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
-            double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
-            double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
-            double bRightPower = bRightDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
+            int tLeftPower =   tLeftDT.getCurrentPosition() + (int) (conversion * -distance);
+            int bLeftPower =   bLeftDT.getCurrentPosition() + (int) (conversion *  distance);
+            int tRightPower = tRightDT.getCurrentPosition() + (int) (conversion *  distance);
+            int bRightPower = bRightDT.getCurrentPosition() + (int) (conversion * -distance);
 
-            tLeftDT.setPower(speed);
-            bLeftDT.setPower(speed);
-            tRightDT.setPower(speed);
-            bRightDT.setPower(speed);
-
-            tLeftDT.setTargetPosition((int) tLeftPower);
-            bLeftDT.setTargetPosition((int) bLeftPower);
-            tRightDT.setTargetPosition((int) tRightPower);
-            bRightDT.setTargetPosition((int) bRightPower);
+            tLeftDT.setTargetPosition(tLeftPower);
+            bLeftDT.setTargetPosition(bLeftPower);
+            tRightDT.setTargetPosition(tRightPower);
+            bRightDT.setTargetPosition(bRightPower);
 
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -130,33 +136,41 @@ public class Bot {
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            tLeftDT.setPower(Math.abs(speed));
+            tRightDT.setPower(Math.abs(speed));
+            bLeftDT.setPower(Math.abs(speed));
+            bRightDT.setPower(Math.abs(speed));
+
         }
 
     }
 
-    public static void strafeDrive (float distanceX, float distanceY, double speed, boolean tiles, LinearOpMode opMode)
-    {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileConversion * (distanceY +  distanceX);
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileConversion * (distanceY + -distanceX);
-        double tRightPower = tRightDT.getCurrentPosition() + tileConversion * (distanceY + -distanceX);
-        double bRightPower = bRightDT.getCurrentPosition() + tileConversion * (distanceY +  distanceX);
+    public static void driveStraight(double fLeftcm, double fRightcm, double bLeftcm,
+                                     double bRightcm, double speed){
 
-        tLeftDT.setPower(speed);
-        bLeftDT.setPower(speed);
-        tRightDT.setPower(speed);
-        bRightDT.setPower(speed);
+        int newFrontLeftTarget  = tLeftDT.getCurrentPosition()  + (int) (fLeftcm * conversion);
+        int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);
+        int newBackLeftTarget   = bLeftDT.getCurrentPosition()  + (int) (bLeftcm * conversion);
+        int newBackRightTarget  = bRightDT.getCurrentPosition() + (int) (bRightcm * conversion);
+
+
+        // Set Target and Turn On RUN_TO_POSITION
+        tLeftDT.setTargetPosition(newFrontLeftTarget);
+        tRightDT.setTargetPosition(newFrontRightTarget);
+        bLeftDT.setTargetPosition(newBackLeftTarget);
+        bRightDT.setTargetPosition(newBackRightTarget);
+
+        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        tLeftDT.setTargetPosition( (int)tLeftPower);
-        bLeftDT.setTargetPosition( (int)bLeftPower);
-        tRightDT.setTargetPosition((int)tRightPower);
-        bRightDT.setTargetPosition((int)bRightPower);
-
+        tLeftDT.setPower(Math.abs(speed));
+        tRightDT.setPower(Math.abs(speed));
+        bLeftDT.setPower(Math.abs(speed));
+        bRightDT.setPower(Math.abs(speed));
     }
 
     public static void gyroDrive(double speed,
@@ -281,6 +295,7 @@ public class Bot {
     public static void strafeToPosition(double cm, double speed) {
         //
         int move = (int) (Math.round(cm * conversion * 0.8));
+
         //
          bLeftDT.setTargetPosition( bLeftDT.getCurrentPosition() - move);
          tLeftDT.setTargetPosition( tLeftDT.getCurrentPosition() + move);

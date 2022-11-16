@@ -26,6 +26,11 @@ public class ParkingAutoLeft extends LinearOpMode {
         Bot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Bot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+        if (opModeInInit()) {
+            telemetry.addData("Angle: ", Bot.Gyro.getIntegratedZValue());
+            telemetry.update();
+        }
         waitForStart();
 
         ObjectDetector.POSITIONS position = detector.getDecision(this);

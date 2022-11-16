@@ -64,7 +64,7 @@ public class teleOP extends OpMode {
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
@@ -178,11 +178,11 @@ public class teleOP extends OpMode {
 
         //lift code
         if (gamepad2.dpad_down) {
-            Lift.setTargetPosition(Lift.getCurrentPosition() + 5);
+            Lift.setPower(.5);
         } else if (gamepad2.dpad_up) {
-            Lift.setTargetPosition(Lift.getCurrentPosition() - 5);
+            Lift.setPower(-.5);
         }else{
-            Lift.setTargetPosition(Lift.getCurrentPosition());
+            Lift.setPower(0);
         }
 
 

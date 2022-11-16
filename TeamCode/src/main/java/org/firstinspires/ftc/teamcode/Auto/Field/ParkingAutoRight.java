@@ -26,12 +26,17 @@ public class ParkingAutoRight extends LinearOpMode {
         Bot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Bot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        if (opModeInInit()) {
+            telemetry.addData("Angle: ", Bot.Gyro.getIntegratedZValue());
+            telemetry.update();
+        }
         waitForStart();
 
         ObjectDetector.POSITIONS position = detector.getDecision(this);
         //robot.strafeDrive(-40, 0, 0.7, this);
         //robot.strafeDrive(0,70, 0.7, this);
        // robot.strafeDrive(-39, 0, 0.7, this);
+
         Bot.strafeToPosition(40,.7);
         Bot.gyroDrive(.7, 70,70,70,70,0,this);
         Bot.strafeToPosition(-39,.7);
