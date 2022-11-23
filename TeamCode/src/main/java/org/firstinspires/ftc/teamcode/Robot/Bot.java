@@ -40,7 +40,6 @@ public class Bot {
         bRightDT  = hwMap.get(DcMotor.class, "BackR");
         Lift      = hwMap.get(DcMotor.class, "lift"    );
         Claw      = hwMap.get(DcMotor.class, "claw"    );
-        Gyro      = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
 
 
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
@@ -94,18 +93,12 @@ public class Bot {
 
 
 
-        opMode.telemetry.addLine("Start Gyro");
-        opMode.telemetry.update();
-        Gyro.calibrate();
-        while (Gyro.isCalibrating()){ opMode.telemetry.addLine("Gyro Calibrating"); }
-        opMode.telemetry.addData("Angle: ", Gyro.getIntegratedZValue());
-        opMode.telemetry.addLine("Gyro Calibrated");
+
 
 
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
 
-        opMode.telemetry.addData("Angle: ", Gyro.getIntegratedZValue());
 
 
     }
@@ -130,7 +123,6 @@ public class Bot {
             tRightDT.setTargetPosition(tRightPower);
             bRightDT.setTargetPosition(bRightPower);
 
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -146,8 +138,8 @@ public class Bot {
 
     }
 
-    public static void driveStraight(double fLeftcm, double fRightcm, double bLeftcm,
-                                     double bRightcm, double speed){
+    public static void driveStraight(double speed, double fLeftcm, double fRightcm, double bLeftcm,
+                                     double bRightcm, LinearOpMode opmode){
 
         int newFrontLeftTarget  = tLeftDT.getCurrentPosition()  + (int) (fLeftcm * conversion);
         int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);

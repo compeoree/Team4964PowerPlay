@@ -25,12 +25,12 @@ public class ObjectDetector {
 
 
 
-    private final Point R_FRONT_LEFT_TL   = new Point(110,180);
+    private final Point R_FRONT_LEFT_TL   = new Point(160, 100);
     private final Point R_FRONT_LEFT_BR   = new Point(160, 220);
     private final Point R_FRONT_MIDDLE_TL = new Point(260, 180);
     private final Point R_FRONT_MIDDLE_BR = new Point(310,  220);
-    private final Point R_FRONT_RIGHT_TL  = new Point(10, 180);
-    private final Point R_FRONT_RIGHT_BR  = new Point(51, 220);
+    private final Point R_FRONT_RIGHT_TL  = new Point(55, 110);
+    private final Point R_FRONT_RIGHT_BR  = new Point(105,150);
 
 
     private Point leftTL;
