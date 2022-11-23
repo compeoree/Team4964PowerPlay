@@ -63,7 +63,7 @@ public class ObjectDetector {
             position = POSITIONS.POS3;
         if (b == 255)
             position = POSITIONS.POS2;
-        if (g == 255)
+        if (g > 200 && r > 200 && b > 200)
             position = POSITIONS.POS1;
         /*if (r > 254 && (g < 70 && b < 70))
             position = POSITIONS.POS3;
