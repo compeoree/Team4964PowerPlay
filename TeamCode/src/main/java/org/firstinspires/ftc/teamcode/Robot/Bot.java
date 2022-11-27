@@ -42,7 +42,7 @@ public class Bot {
         Claw      = hwMap.get(DcMotor.class, "claw"    );
 
 
-        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+        tLeftDT.setDirection(DcMotor.Direction.FORWARD);
         tLeftDT.setDirection(DcMotor.Direction.FORWARD);
         bRightDT.setDirection(DcMotor.Direction.REVERSE);
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
@@ -51,7 +51,7 @@ public class Bot {
 
 
 
-        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -60,7 +60,7 @@ public class Bot {
 
 
 
-        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -79,7 +79,7 @@ public class Bot {
 
 
 
-        bLeftDT.setPower(0);
+        tRightDT.setPower(0);
         tLeftDT.setPower(0);
         bRightDT.setPower(0);
         bLeftDT.setPower(0);
@@ -110,7 +110,7 @@ public class Bot {
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if(opMode.opModeIsActive()) {
-            distance = (float) (1 * Math.pow(distance, 3));
+
 
             boolean done = false;
 
@@ -164,10 +164,10 @@ public class Bot {
                                      double bRightcm, LinearOpMode opmode){
 
         if(opmode.opModeIsActive()) {
-            int newFrontLeftTarget = tLeftDT.getCurrentPosition() + (int) (fLeftcm * conversion);
+            int newFrontLeftTarget = -(tLeftDT.getCurrentPosition() + (int) (fLeftcm * conversion));
             int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);
             int newBackLeftTarget = bLeftDT.getCurrentPosition() + (int) (bLeftcm * conversion);
-            int newBackRightTarget = bRightDT.getCurrentPosition() + (int) (bRightcm * conversion);
+            int newBackRightTarget = -(bRightDT.getCurrentPosition() + (int) (bRightcm * conversion));
 
             boolean done = false;
 
