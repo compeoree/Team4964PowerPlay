@@ -4,9 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Robot.Bot;
-import org.firstinspires.ftc.teamcode.Robot.Variables;
-
 
 @TeleOp(name="teleOP!!!!!!!!")
 public class teleOP extends OpMode {
@@ -18,7 +15,7 @@ public class teleOP extends OpMode {
     public static DcMotor bRightDT = null;
     public static DcMotor Lift     = null;
     public static DcMotor Claw     = null;
-    public static Variables var = null;
+
 
     public double speedMode = 1;
     public boolean xIsHeld = false;
@@ -44,7 +41,6 @@ public class teleOP extends OpMode {
         bRightDT  = hardwareMap.get(DcMotor.class, "BackR");
         Lift      = hardwareMap.get(DcMotor.class, "lift"    );
         Claw      = hardwareMap.get(DcMotor.class,   "claw"    );
-        var       = new Variables();
 
 
 
@@ -183,31 +179,9 @@ public class teleOP extends OpMode {
 
 
         //lift code
+        Lift.setPower(4*gamepad2.left_stick_y);
 
-        if (gamepad2.dpad_down){
-            Bot.Lift.setTargetPosition(var.Lvl_Ground);
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        }
-        else if (gamepad2.dpad_left){
-            Bot.Lift.setTargetPosition(var.Lvl_Short);
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        }
-        else if (gamepad2.dpad_right){
-            Bot.Lift.setTargetPosition(var.Lvl_Mid);
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        }
-        else if (gamepad2.dpad_up) {
-            Bot.Lift.setTargetPosition(var.Lvl_Tall);
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        }
-        else {
-            Bot.Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Bot.Lift.setPower(-gamepad2.left_stick_y);
-        }
 
         //wormhole in
         if(gamepad2.y){

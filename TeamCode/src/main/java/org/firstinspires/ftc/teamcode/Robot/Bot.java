@@ -41,15 +41,12 @@ public class Bot {
         Lift      = hwMap.get(DcMotor.class, "lift"    );
         Claw      = hwMap.get(DcMotor.class, "claw"    );
 
-
         tLeftDT.setDirection(DcMotor.Direction.FORWARD);
         tLeftDT.setDirection(DcMotor.Direction.FORWARD);
         bRightDT.setDirection(DcMotor.Direction.REVERSE);
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
         Lift.setDirection(DcMotor.Direction.FORWARD);
         Claw.setDirection(DcMotor.Direction.FORWARD);
-
-
 
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -58,8 +55,6 @@ public class Bot {
         Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-
-
         tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -67,17 +62,12 @@ public class Bot {
         Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-
-
         bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-
-
 
         tRightDT.setPower(0);
         tLeftDT.setPower(0);
@@ -88,18 +78,8 @@ public class Bot {
 
         Claw.setTargetPosition(var.claw_cone);
 
-
-
-
-
-
-
-
-
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
-
-
 
     }
 
@@ -126,36 +106,27 @@ public class Bot {
 
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            tLeftDT.setPower(Math.abs(speed));
-            tRightDT.setPower(Math.abs(speed));
-            bLeftDT.setPower(Math.abs(speed));
-            bRightDT.setPower(Math.abs(speed));
+            tLeftDT.setPower(speed);
+            tRightDT.setPower(speed);
+            bLeftDT.setPower(speed);
+            bRightDT.setPower(speed);
 
             while (opMode.opModeIsActive() && !done) {
                 double error = 0.9;
 
-                double actError = (tLeftPower - tLeftDT.getCurrentPosition()) + (bLeftPower - tRightDT.getCurrentPosition()) +
-                        (tRightPower - bLeftDT.getCurrentPosition()) + (bRightPower - bRightDT.getCurrentPosition());
+                double actError = (tLeftPower - tLeftDT.getCurrentPosition()) + (bLeftPower - bLeftDT.getCurrentPosition()) +
+                        (tRightPower - tRightDT.getCurrentPosition()) + (bRightPower - bRightDT.getCurrentPosition());
 
                 if (error > actError) {
                     done = true;
                 }
-
-                tRightDT.setPower(0);
-                tLeftDT.setPower(0);
-                bRightDT.setPower(0);
-                bLeftDT.setPower(0);
-
-                tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
             }
+
+
         }
 
     }
@@ -164,10 +135,10 @@ public class Bot {
                                      double bRightcm, LinearOpMode opmode){
 
         if(opmode.opModeIsActive()) {
-            int newFrontLeftTarget = -(tLeftDT.getCurrentPosition() + (int) (fLeftcm * conversion));
+            int newFrontLeftTarget = tLeftDT.getCurrentPosition() - (int) (fLeftcm * conversion);
             int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);
             int newBackLeftTarget = bLeftDT.getCurrentPosition() + (int) (bLeftcm * conversion);
-            int newBackRightTarget = -(bRightDT.getCurrentPosition() + (int) (bRightcm * conversion));
+            int newBackRightTarget = bRightDT.getCurrentPosition() - (int) (bRightcm * conversion);
 
             boolean done = false;
 
@@ -179,8 +150,8 @@ public class Bot {
             bRightDT.setTargetPosition(newBackRightTarget);
 
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
@@ -195,20 +166,13 @@ public class Bot {
                 double actError = (newFrontLeftTarget - tLeftDT.getCurrentPosition()) + (newFrontRightTarget - tRightDT.getCurrentPosition()) +
                 (newBackLeftTarget - bLeftDT.getCurrentPosition()) + (newBackRightTarget - bRightDT.getCurrentPosition());
 
+
+
                 if (error > actError){
                     done = true;
                 }
             }
 
-            tRightDT.setPower(0);
-            tLeftDT.setPower(0);
-            bRightDT.setPower(0);
-            bLeftDT.setPower(0);
-
-            tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         }
 
