@@ -22,6 +22,8 @@ public class teleOP extends OpMode {
     public boolean bIsHeld = false;
     public boolean dpadLeftIsHeld = false;
     public boolean dpadRightIsHeld = false;
+    public double spd = 0.4;
+
 
 
 
@@ -185,13 +187,19 @@ public class teleOP extends OpMode {
             Lift.setPower(0);
         }
 
-
         //wormhole in
+        if(gamepad2.y){
+            spd += 0.1;
+        }
+        if(gamepad2.a){
+            spd -= 0.1;
+        }
+
         if (gamepad2.b) {
-            Claw.setPower(0.4);
+            Claw.setPower(spd);
 
         }else if (gamepad2.x) {
-            Claw.setPower(-.4);
+            Claw.setPower(-spd);
 
         }else {
             Claw.setPower(0);
