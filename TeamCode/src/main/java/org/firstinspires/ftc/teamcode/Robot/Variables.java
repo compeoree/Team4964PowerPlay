@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 public class Variables  {
-    public int Lvl_Ground = 0,
-            Lvl_Short  = -1400,
-            Lvl_Mid    = -2400,
+    public int Lvl_Ground = -53,
+            Lvl_Short  = -1200,
+            Lvl_Mid    = -2200,
             Lvl_Tall   = -3200;
     public boolean slo,
             btnlock = false;
