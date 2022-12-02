@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.Auto.Detection.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
 
-
 @Autonomous(name= "Left Parking Auto")
 public class ParkingAutoLeft extends LinearOpMode {
 
@@ -43,7 +42,8 @@ public class ParkingAutoLeft extends LinearOpMode {
 
         // getting into position to drop cone
         robot.Lift.setTargetPosition(var.Lvl_Tall);
-        sleep(1000);
+        while (!checktarget(robot.Lift.getCurrentPosition(), robot.Lift.getTargetPosition()))
+            sleep(300);
         //robot.strafeDrive(0, 4, 0.7, this);
         Bot.gyroDrive(.7, 4, 4, 4, 4, 0, this);
 
@@ -74,5 +74,12 @@ public class ParkingAutoLeft extends LinearOpMode {
                 Bot.strafeToPosition(-112,.7);
 
         }
+    }
+
+    private boolean checktarget(int currentPos,int desiredPos) {
+        int absCurrentPos = Math.abs(currentPos);
+        int absDesiredPos = Math.abs(desiredPos);
+        int deadband = 4;
+        return (absCurrentPos >= (absDesiredPos - deadband) && absCurrentPos <= (absDesiredPos + deadband));
     }
 }
