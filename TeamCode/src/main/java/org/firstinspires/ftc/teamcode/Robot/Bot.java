@@ -17,7 +17,8 @@ public class Bot {
     public static DcMotor bRightDT = null;
     public static DcMotor Lift     = null;
     public static DcMotor Claw     = null;
-    public static ModernRoboticsI2cGyro Gyro = null;
+
+    public static ModernRoboticsI2cGyro Gyro;
 
     static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
@@ -35,176 +36,203 @@ public class Bot {
     public void init(HardwareMap ahwMap, OpMode opMode) {
         HardwareMap hwMap = ahwMap;
         Variables var = new Variables();
-
-        // Init Front Left motor
-        try {
-            tLeftDT = hwMap.get(DcMotor.class, "FrontL");
-            tLeftDT.setDirection(DcMotor.Direction.FORWARD);
-            tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            tLeftDT.setPower(0);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("FrontL: Motor Error!");
-            opMode.telemetry.update();
-        }
-
-        // Init Back Left motor
-        try {
-            bLeftDT = hwMap.get(DcMotor.class, "BackL");
-            bLeftDT.setDirection(DcMotor.Direction.FORWARD);
-            bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            bLeftDT.setPower(0);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("BackL: Motor Error!");
-            opMode.telemetry.update();
-        }
+        tLeftDT   = hwMap.get(DcMotor.class, "FrontL");
+        bLeftDT   = hwMap.get(DcMotor.class, "BackL");
+        tRightDT  = hwMap.get(DcMotor.class, "FrontR");
+        bRightDT  = hwMap.get(DcMotor.class, "BackR");
+        Lift      = hwMap.get(DcMotor.class, "lift"    );
+        Claw      = hwMap.get(DcMotor.class, "claw"    );
 
 
-        // Init Front Right motor
-        try {
-            tRightDT = hwMap.get(DcMotor.class, "FrontR");
-            tRightDT.setDirection(DcMotor.Direction.FORWARD);
-            tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            tRightDT.setPower(0);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("FrontR: Motor Error!");
-            opMode.telemetry.update();
-        }
+        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+        tLeftDT.setDirection(DcMotor.Direction.FORWARD);
+        bRightDT.setDirection(DcMotor.Direction.REVERSE);
+        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+        Lift.setDirection(DcMotor.Direction.FORWARD);
+        Claw.setDirection(DcMotor.Direction.FORWARD);
 
-        // Init Back Right motor
-        try {
-            bRightDT = hwMap.get(DcMotor.class, "BackR");
-            bRightDT.setDirection(DcMotor.Direction.REVERSE);
-            bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            bRightDT.setPower(0);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("BackR: Motor Error!");
-            opMode.telemetry.update();
-        }
 
-        // Init Lift motor
-        try {
-            Lift = hwMap.get(DcMotor.class, "lift"    );
-            Lift.setDirection(DcMotor.Direction.FORWARD);
-            Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            Lift.setPower(0);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("Lift: Motor Error!");
-            opMode.telemetry.update();
-        }
 
-        // Init Claw motor
-        try {
-            Claw = hwMap.get(DcMotor.class,   "claw"    );
-            Claw.setDirection(DcMotor.Direction.FORWARD);
-            Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            Claw.setPower(0);
-            Claw.setTargetPosition(var.claw_cone);
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("Lift: Motor Error!");
-            opMode.telemetry.update();
-        }
+        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // Init Gyro
-        try {
-            Gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
-            Gyro.calibrate();
-            int timeout = 60;
-            while (Gyro.isCalibrating() && --timeout > 0) {
-                sleep(50);
-            }
-            opMode.telemetry.addLine("Gyro Calibrated");
-            opMode.telemetry.update();
-        }
-        catch (IllegalArgumentException iae) {
-            opMode.telemetry.addLine("Gyro: Init Error! - Illegal Argument");
-            opMode.telemetry.update();
-        }
-        catch (InterruptedException ie) {
-            opMode.telemetry.addLine("Gyro: Init Error! - Interrupted");
-            opMode.telemetry.update();
-        }
 
-        opMode.telemetry.addLine("Initialization Complete!");
+
+        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Claw.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+
+        bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
+
+
+        bLeftDT.setPower(0);
+        tLeftDT.setPower(0);
+        bRightDT.setPower(0);
+        bLeftDT.setPower(0);
+        Lift.setPower(0);
+        Claw.setPower(0);
+
+        Claw.setTargetPosition(var.claw_cone);
+
+
+
+
+
+
+
+
+
+        opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
+
+
 
     }
 
+
+
     //driving using only Mecanum strafe
-    public static void strafeDrive (float distanceX, float distanceY, double speed, LinearOpMode opMode)
+    public static void strafeDrive (float distance, double speed, LinearOpMode opMode) throws InterruptedException
     {
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if (opMode.opModeIsActive()) {
 
-            distanceX = (float) (1 * Math.pow(distanceX, 3));
-            distanceY = (float) (1 * Math.pow(distanceY, 3));
+            distance = (float) (1 * Math.pow(distance, 3));
 
-            double tLeftPower =   tLeftDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
-            double bLeftPower =   bLeftDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
-            double tRightPower = tRightDT.getCurrentPosition() + conversion * (distanceY + -distanceX);
-            double bRightPower = bRightDT.getCurrentPosition() + conversion * (distanceY +  distanceX);
+            int tLeftPos =   tLeftDT.getCurrentPosition() + (int) (conversion * -distance);
+            int bLeftPower =   bLeftDT.getCurrentPosition() + (int) (conversion *  distance);
+            int tRightPower = tRightDT.getCurrentPosition() + (int) (conversion *  distance);
+            int bRightPower = bRightDT.getCurrentPosition() + (int) (conversion * -distance);
 
-            tLeftDT.setPower(speed);
-            bLeftDT.setPower(speed);
-            tRightDT.setPower(speed);
-            bRightDT.setPower(speed);
+            tLeftDT.setTargetPosition(tLeftPos);
+            bLeftDT.setTargetPosition(bLeftPower);
+            tRightDT.setTargetPosition(tRightPower);
+            bRightDT.setTargetPosition(bRightPower);
 
-            tLeftDT.setTargetPosition((int) tLeftPower);
-            bLeftDT.setTargetPosition((int) bLeftPower);
-            tRightDT.setTargetPosition((int) tRightPower);
-            bRightDT.setTargetPosition((int) bRightPower);
-
-            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            opMode.telemetry.addLine("Front left encoder counts: " + tLeftDT.getCurrentPosition() + ":" + tLeftDT.getTargetPosition());
+            opMode.telemetry.addLine("Back left encoder counts: " + bLeftDT.getCurrentPosition() + ":" + bLeftDT.getTargetPosition());
+            opMode.telemetry.addLine("Front right encoder counts: " + tRightDT.getCurrentPosition() + ":" + tRightDT.getTargetPosition());
+            opMode.telemetry.addLine("Back right encoder counts: " + bRightDT.getCurrentPosition() + ":" + bRightDT.getTargetPosition());
+            opMode.telemetry.update();
+
+            double rangedSpeed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            tLeftDT.setPower(Math.abs(rangedSpeed));
+            tRightDT.setPower(Math.abs(rangedSpeed));
+            bLeftDT.setPower(Math.abs(rangedSpeed));
+            bRightDT.setPower(Math.abs(rangedSpeed));
+
+            //opMode.telemetry.addLine("Lift encoder counts: " + Lift.getCurrentPosition());
+            //opMode.telemetry.addLine("Claw encoder counts: " + Claw.getCurrentPosition());
+
+            // check for in position (could also use isBusy() to check each motor)
+            while (!checkTarget(tLeftDT.getCurrentPosition(), tLeftPos)) {
+                sleep(100);
+                opMode.telemetry.addLine("Front left encoder counts: " + tLeftDT.getCurrentPosition() + ":" + tLeftDT.getTargetPosition());
+                opMode.telemetry.addLine("Back left encoder counts: " + bLeftDT.getCurrentPosition() + ":" + bLeftDT.getTargetPosition());
+                opMode.telemetry.addLine("Front right encoder counts: " + tRightDT.getCurrentPosition() + ":" + tRightDT.getTargetPosition());
+                opMode.telemetry.addLine("Back right encoder counts: " + bRightDT.getCurrentPosition() + ":" + bRightDT.getTargetPosition());
+                opMode.telemetry.update();
+            }
+        }
+
+    }
+    public static void straightDrive (float distance, double speed, LinearOpMode opMode) throws InterruptedException
+    {
+        // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
+        if (opMode.opModeIsActive()) {
+
+            distance = (float) (1 * Math.pow(distance, 3));
+
+            int tLeftPos =   tLeftDT.getCurrentPosition() + (int) (conversion * distance);
+            int bLeftPower =   bLeftDT.getCurrentPosition() + (int) (conversion *  distance);
+            int tRightPower = tRightDT.getCurrentPosition() + (int) (conversion *  distance);
+            int bRightPower = bRightDT.getCurrentPosition() + (int) (conversion * distance);
+
+            tLeftDT.setTargetPosition(tLeftPos);
+            bLeftDT.setTargetPosition(bLeftPower);
+            tRightDT.setTargetPosition(tRightPower);
+            bRightDT.setTargetPosition(bRightPower);
+
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+            opMode.telemetry.addLine("Front left encoder counts: " + tLeftDT.getCurrentPosition() + ":" + tLeftDT.getTargetPosition());
+            opMode.telemetry.addLine("Back left encoder counts: " + bLeftDT.getCurrentPosition() + ":" + bLeftDT.getTargetPosition());
+            opMode.telemetry.addLine("Front right encoder counts: " + tRightDT.getCurrentPosition() + ":" + tRightDT.getTargetPosition());
+            opMode.telemetry.addLine("Back right encoder counts: " + bRightDT.getCurrentPosition() + ":" + bRightDT.getTargetPosition());
+            opMode.telemetry.update();
+
+            double rangedSpeed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            tLeftDT.setPower(Math.abs(rangedSpeed));
+            tRightDT.setPower(Math.abs(rangedSpeed));
+            bLeftDT.setPower(Math.abs(rangedSpeed));
+            bRightDT.setPower(Math.abs(rangedSpeed));
+
+            //opMode.telemetry.addLine("Lift encoder counts: " + Lift.getCurrentPosition());
+            //opMode.telemetry.addLine("Claw encoder counts: " + Claw.getCurrentPosition());
+
+            // check for in position (could also use isBusy() to check each motor)
+            while (!checkTarget(tLeftDT.getCurrentPosition(), tLeftPos)) {
+                sleep(100);
+                opMode.telemetry.addLine("Front left encoder counts: " + tLeftDT.getCurrentPosition() + ":" + tLeftDT.getTargetPosition());
+                opMode.telemetry.addLine("Back left encoder counts: " + bLeftDT.getCurrentPosition() + ":" + bLeftDT.getTargetPosition());
+                opMode.telemetry.addLine("Front right encoder counts: " + tRightDT.getCurrentPosition() + ":" + tRightDT.getTargetPosition());
+                opMode.telemetry.addLine("Back right encoder counts: " + bRightDT.getCurrentPosition() + ":" + bRightDT.getTargetPosition());
+                opMode.telemetry.update();
+            }
         }
 
     }
 
-    public static void strafeDrive (float distanceX, float distanceY, double speed, boolean tiles, LinearOpMode opMode)
-    {
-        double tLeftPower  = tLeftDT.getCurrentPosition()  + tileConversion * (distanceY +  distanceX);
-        double bLeftPower  = bLeftDT.getCurrentPosition()  + tileConversion * (distanceY + -distanceX);
-        double tRightPower = tRightDT.getCurrentPosition() + tileConversion * (distanceY + -distanceX);
-        double bRightPower = bRightDT.getCurrentPosition() + tileConversion * (distanceY +  distanceX);
-
-        tLeftDT.setPower(speed);
-        bLeftDT.setPower(speed);
-        tRightDT.setPower(speed);
-        bRightDT.setPower(speed);
-
-        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        tLeftDT.setTargetPosition( (int)tLeftPower);
-        bLeftDT.setTargetPosition( (int)bLeftPower);
-        tRightDT.setTargetPosition((int)tRightPower);
-        bRightDT.setTargetPosition((int)bRightPower);
-
-    }
+//    public static void driveStraight(double speed, double fLeftcm, double fRightcm, double bLeftcm,
+//                                     double bRightcm, LinearOpMode opmode){
+//
+//        int newFrontLeftTarget  = tLeftDT.getCurrentPosition()  + (int) (fLeftcm * conversion);
+//        int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);
+//        int newBackLeftTarget   = bLeftDT.getCurrentPosition()  + (int) (bLeftcm * conversion);
+//        int newBackRightTarget  = bRightDT.getCurrentPosition() + (int) (bRightcm * conversion);
+//
+//
+//        // Set Target and Turn On RUN_TO_POSITION
+//        tLeftDT.setTargetPosition(newFrontLeftTarget);
+//        tRightDT.setTargetPosition(newFrontRightTarget);
+//        bLeftDT.setTargetPosition(newBackLeftTarget);
+//        bRightDT.setTargetPosition(newBackRightTarget);
+//
+//        tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        tRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+//        tLeftDT.setPower(Math.abs(speed));
+//        tRightDT.setPower(Math.abs(speed));
+//        bLeftDT.setPower(Math.abs(speed));
+//        bRightDT.setPower(Math.abs(speed));
+//    }
 
     public static void gyroDrive(double speed,
                                    double fLeftcm, double fRightcm, double bLeftcm,
@@ -328,6 +356,7 @@ public class Bot {
     public static void strafeToPosition(double cm, double speed) {
         //
         int move = (int) (Math.round(cm * conversion * 0.8));
+
         //
          bLeftDT.setTargetPosition( bLeftDT.getCurrentPosition() - move);
          tLeftDT.setTargetPosition( tLeftDT.getCurrentPosition() + move);
@@ -345,12 +374,13 @@ public class Bot {
          bRightDT.setPower(speed);
         //
         while ( tLeftDT.isBusy() &&  tRightDT.isBusy() &&  bLeftDT.isBusy() &&  bRightDT.isBusy()) {
+
         }
          tRightDT.setPower(0);
          tLeftDT.setPower(0);
          bRightDT.setPower(0);
          bLeftDT.setPower(0);
-        return;
+
     }
 
     public static double getError(double targetAngle) {
@@ -368,6 +398,12 @@ public class Bot {
         return Range.clip(err * PCoeff, -DRIVE_SPEED, 1);
     }
 
+    private static boolean checkTarget(int currentPos,int desiredPos) {
+        int absCurrentPos = Math.abs(currentPos);
+        int absDesiredPos = Math.abs(desiredPos);
+        int deadband = 4;
+        return (absCurrentPos >= (absDesiredPos - deadband) && absCurrentPos <= (absDesiredPos + deadband));
+    }
 
 }
 
