@@ -22,6 +22,8 @@ public class teleOP extends OpMode {
     public boolean bIsHeld = false;
     public boolean dpadLeftIsHeld = false;
     public boolean dpadRightIsHeld = false;
+    public double spd = 0.4;
+
 
 
 
@@ -42,7 +44,7 @@ public class teleOP extends OpMode {
 
 
 
-        bLeftDT.setDirection(DcMotor.Direction.FORWARD);
+        tRightDT.setDirection(DcMotor.Direction.FORWARD);
         tLeftDT.setDirection(DcMotor.Direction.FORWARD);
         bRightDT.setDirection(DcMotor.Direction.REVERSE);
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
@@ -51,7 +53,7 @@ public class teleOP extends OpMode {
 
 
 
-        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -60,7 +62,7 @@ public class teleOP extends OpMode {
 
 
 
-        bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        tRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bRightDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bLeftDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -69,10 +71,10 @@ public class teleOP extends OpMode {
 
 
 
-        bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         tLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         bRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        tRightDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bLeftDT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Claw.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -82,7 +84,7 @@ public class teleOP extends OpMode {
         bLeftDT.setPower(0);
         tLeftDT.setPower(0);
         bRightDT.setPower(0);
-        bLeftDT.setPower(0);
+        tRightDT.setPower(0);
         Lift.setPower(0);
         Claw.setPower(0);
 
@@ -177,31 +179,26 @@ public class teleOP extends OpMode {
 
 
         //lift code
-        if (gamepad2.dpad_down) {
-            Lift.setPower(.5);
-        } else if (gamepad2.dpad_up) {
-            Lift.setPower(-.5);
-        }else{
-            Lift.setPower(0);
-        }
+        Lift.setPower(4*gamepad2.left_stick_y);
+
 
 
         //wormhole in
+        if(gamepad2.y){
+            spd += 0.1;
+        }
+        if(gamepad2.a){
+            spd -= 0.1;
+        }
+
         if (gamepad2.b) {
-            if (Claw.getCurrentPosition() <= 0) {
-                Claw.setPower(0.4);
-            }else {
-                Claw.setPower(0);
-            }
+            Claw.setPower(spd);
+
         }else if (gamepad2.x) {
-            if (Claw.getCurrentPosition() >= -20) {
-                Claw.setPower(-.4);
-            } else {
-                Claw.setPower(0);
-            }
+            Claw.setPower(-spd);
+
         }else {
             Claw.setPower(0);
-
 
         }
         telemetry.addLine("Front left encoder counts: " + tLeftDT.getCurrentPosition());
