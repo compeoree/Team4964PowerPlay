@@ -120,7 +120,7 @@ public class ParkingAutoRight extends LinearOpMode {
     void ACTIII(){
         switch (pos) {
             case POS1:
-                Bot.strafeDrive(-30,.9,this);
+                Bot.strafeDrive(-32,.9,this);
                 break;
             case POS2:
                 Bot.strafeDrive(30,.9,this);
