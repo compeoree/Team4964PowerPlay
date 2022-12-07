@@ -14,6 +14,7 @@ public class ParkingAutoRight extends LinearOpMode {
 
     Bot robot = new Bot();
     Variables var = new Variables();
+    ObjectDetector.POSITIONS pos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -25,23 +26,33 @@ public class ParkingAutoRight extends LinearOpMode {
         Bot.tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Bot.bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Bot.tRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.Lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        Bot.Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
+
+        // camera decision
         ObjectDetector.POSITIONS position = detector.getDecision(this);
+        pos = position;
         telemetry.addData("position ", detector.getDecision(this));
+
 
 
         //robot.strafeDrive(-40, 0, 0.7, this);
         //robot.strafeDrive(0,70, 0.7, this);
        // robot.strafeDrive(-39, 0, 0.7, this);
 
-        Bot.strafeDrive(40,.7, this);
-    //    Bot.driveStraight(.7, 70,70,70,70,this);
-    //    Bot.strafeDrive(-39,.7, this);
+
+        ACTI();
+
+        ACTII();
+
+        ACTIII();
+
+
 //
 //
     //    // getting into position to drop cone
-    //    Bot.Lift.setTargetPosition(var.Lvl_Tall);
     //    //robot.strafeDrive(0, 4, 0.7, this);
     //    Bot.driveStraight(.7, 4,4,4,4,this);
 //
@@ -70,5 +81,52 @@ public class ParkingAutoRight extends LinearOpMode {
     //                 Bot.strafeDrive(112,.7, this);
 //
     //    }
+    }
+
+    void ACTI(){
+        Bot.Claw.setTargetPosition(var.claw_cone);
+        sleep(1);
+        Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Bot.Claw.setPower(1);
+        sleep(550);
+        Bot.strafeDrive(-55,.5, this);
+        sleep(5);
+        Bot.driveStraight(125,.5, this);
+        sleep(5);
+        Bot.strafeDrive(39,.3,this);
+    }
+
+    void ACTII(){
+        Bot.Lift.setTargetPosition(var.Lvl_Tall);
+        sleep(1);
+        Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Bot.Lift.setPower(1);
+        sleep(-var.Lvl_Tall);
+        Bot.driveStraight(16, .3, this);
+        Bot.Lift.setTargetPosition(var.Lvl_Tall + 200);
+        sleep(75);
+        Bot.strafeDrive(2,.5,this);
+        Bot.Claw.setTargetPosition(var.claw_zero);
+        sleep(2000);
+        Bot.driveStraight(-20, .3, this);
+        sleep(1);
+        Bot.Claw.setTargetPosition(var.claw_cone);
+        sleep(600);
+        Bot.Lift.setTargetPosition(var.Lvl_Ground);
+        sleep(-var.Lvl_Tall);
+        Bot.Lift.setPower(0);
+    }
+
+    void ACTIII(){
+        switch (pos) {
+            case POS1:
+                Bot.strafeDrive(-30,.9,this);
+                break;
+            case POS2:
+                Bot.strafeDrive(30,.9,this);
+                break;
+            case POS3:
+                Bot.strafeDrive(95,.9,this);
+        }
     }
 }

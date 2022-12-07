@@ -29,8 +29,8 @@ public class ObjectDetector {
     private final Point R_FRONT_LEFT_BR   = new Point(160, 220);
     private final Point R_FRONT_MIDDLE_TL = new Point(260, 180);
     private final Point R_FRONT_MIDDLE_BR = new Point(310,  220);
-    private final Point R_FRONT_RIGHT_TL  = new Point(55, 110);
-    private final Point R_FRONT_RIGHT_BR  = new Point(105,150);
+    private final Point R_FRONT_RIGHT_TL  = new Point(65, 130);
+    private final Point R_FRONT_RIGHT_BR  = new Point(115,170);
 
 
     private Point leftTL;
@@ -79,24 +79,29 @@ public class ObjectDetector {
 
     public POSITIONS getDecision(LinearOpMode opMode) {
 
-        POSITIONS position = POSITIONS.POS3;
+        POSITIONS position = POSITIONS.POS1;
 
-        int leftValue   = -cone.getBlack();
-        int middleValue = cone.getdBlue();
+        int leftValue   = cone.getGreen();
+        int middleValue = cone.getBlue();
         int rightValue  = cone.getRed();
 
-        if(leftValue > middleValue && leftValue > rightValue){
-            position = POSITIONS.POS1;
-            opMode.telemetry.addData("decision:", position);
-        }
-        else if(middleValue > leftValue && middleValue > rightValue){
+
+        if(middleValue > rightValue && middleValue > leftValue){
             position = POSITIONS.POS2;
-            opMode.telemetry.addData("decision:", position);
         }
-        else{
-            opMode.telemetry.addData("decision:", position);
+        else if(rightValue > middleValue && rightValue > leftValue){
+            position = POSITIONS.POS3;
+        }
+        else if(leftValue > rightValue && leftValue > middleValue){
+            position = POSITIONS.POS1;
         }
 
+        opMode.telemetry.addData("decision:", position);
+
+
+        //red 1
+        //white 2
+        //blue 1
 
         if (show_value){
 
@@ -119,12 +124,9 @@ public class ObjectDetector {
             cone = getAverageColor(input, rightTL, rightBR);
 
             int thickness = 3;
-            Scalar leftColor = new Scalar(255, 0, 0);
-            Scalar middleColor = new Scalar(255, 255, 255);
             Scalar rightColor = new Scalar(0, 0, 255);
 
-            Imgproc.rectangle(input, leftTL, leftBR, leftColor, thickness);
-            Imgproc.rectangle(input, middleTL, middleBR, middleColor, thickness);
+
             Imgproc.rectangle(input, rightTL, rightBR, rightColor, thickness);
 
             //sendTelemetry();
