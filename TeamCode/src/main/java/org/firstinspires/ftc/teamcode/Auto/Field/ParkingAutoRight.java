@@ -105,7 +105,7 @@ public class ParkingAutoRight extends LinearOpMode {
         Bot.driveStraight(16, .3, this);
         Bot.Lift.setTargetPosition(var.Lvl_Tall + 200);
         sleep(75);
-        Bot.strafeDrive(2,.5,this);
+        Bot.strafeDrive(3,.5,this);
         Bot.Claw.setTargetPosition(var.claw_zero);
         sleep(2000);
         Bot.driveStraight(-20, .3, this);
@@ -120,7 +120,7 @@ public class ParkingAutoRight extends LinearOpMode {
     void ACTIII(){
         switch (pos) {
             case POS1:
-                Bot.strafeDrive(-32,.9,this);
+                Bot.strafeDrive(-35,.9,this);
                 break;
             case POS2:
                 Bot.strafeDrive(30,.9,this);
