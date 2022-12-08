@@ -31,6 +31,13 @@ public class TestMoves extends LinearOpMode {
 
         waitForStart();
 
+        robot.Gyro.calibrate();
+        int timer=400;
+        while (timer-- > 0) {
+            sleep(100);
+            this.telemetry.addLine("Timer: " + timer + " Angle: " + robot.Gyro.getHeading());
+            this.telemetry.update();
+        }
         //ObjectDetector.POSITIONS position = detector.getDecision(this);
         //robot.strafeDrive(-40, 0, 0.7, this);
         //robot.strafeDrive(0,70, 0.7, this);

@@ -42,6 +42,7 @@ public class Bot {
         bRightDT  = hwMap.get(DcMotor.class, "BackR");
         Lift      = hwMap.get(DcMotor.class, "lift"    );
         Claw      = hwMap.get(DcMotor.class, "claw"    );
+        Gyro      = hwMap.get(ModernRoboticsI2cGyro.class, "Gyro");
 
 
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
