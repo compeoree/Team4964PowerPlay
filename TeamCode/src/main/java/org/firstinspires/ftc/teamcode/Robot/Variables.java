@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.Robot;
 
 public class Variables  {
-    public int Lvl_Ground = -53,
-            Lvl_Short  = -1200,
-            Lvl_Mid    = -2200,
-            Lvl_Tall   = -3200;
+    public int Lvl_Ground = -100,
+            Lvl_Short  = -1000,
+            Lvl_Mid    = -2000,
+            Lvl_Tall   = -3000;
     public boolean slo,
             btnlock = false;
-    public int claw_zero = 5,
-            claw_open = -28,
-            claw_cone = -13;
+    public int claw_zero = 35,
+            claw_cone = -28;
     static final double     COUNTS_PER_MOTOR_REV    = 19;
     static final double     DRIVE_GEAR_REDUCTION    = 40;
     static final double     WHEEL_DIAMETER_INCHES   = 4.125;

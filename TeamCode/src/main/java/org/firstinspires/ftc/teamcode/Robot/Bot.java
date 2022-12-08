@@ -32,6 +32,9 @@ public class Bot {
     public static final double tileConversion = conversion * 60; // var.conversion of encoder rotations to tiles !!EDIT!!
 
     public void init(HardwareMap ahwMap, OpMode opMode) {
+        opMode.telemetry.addLine("wait for it... ");
+        opMode.telemetry.update();
+
         HardwareMap hwMap = ahwMap;
         Variables var = new Variables();
         tLeftDT   = hwMap.get(DcMotor.class, "FrontL");
@@ -47,6 +50,7 @@ public class Bot {
         bLeftDT.setDirection(DcMotor.Direction.FORWARD);
         Lift.setDirection(DcMotor.Direction.FORWARD);
         Claw.setDirection(DcMotor.Direction.FORWARD);
+
 
         bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -76,10 +80,23 @@ public class Bot {
         Lift.setPower(0);
         Claw.setPower(0);
 
-        Claw.setTargetPosition(var.claw_cone);
 
         opMode.telemetry.addLine("Initialization Complete! ;) ");
         opMode.telemetry.update();
+
+    }
+
+    public static void liftSet (int height, double speed, LinearOpMode opMode){
+        boolean done = false;
+
+        Lift.setTargetPosition((int) (height * 1.1));
+
+        speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+        Lift.setPower(speed);
+
+        Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
 
     }
 
@@ -88,16 +105,20 @@ public class Bot {
     //driving using only Mecanum strafe
     public static void strafeDrive (float distance, double speed, LinearOpMode opMode)
     {
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
         if(opMode.opModeIsActive()) {
-
+            double error = distance / Math.abs(distance);
 
             boolean done = false;
 
-            int tLeftPower = tLeftDT.getCurrentPosition() + (int) (conversion * -distance);
-            int bLeftPower = bLeftDT.getCurrentPosition() + (int) (conversion * distance);
-            int tRightPower = tRightDT.getCurrentPosition() + (int) (conversion * distance);
-            int bRightPower = bRightDT.getCurrentPosition() + (int) (conversion * -distance);
+            int tLeftPower = tLeftDT.getCurrentPosition() + (int) (conversion * -distance * 1.1 - (error * 1.5 * speed));
+            int bLeftPower = bLeftDT.getCurrentPosition() + (int) (conversion * distance * 1.1 - (error * 1.5 * speed));
+            int tRightPower = tRightDT.getCurrentPosition() + (int) (conversion * distance * 1.1 + (error * 1.5 * speed));
+            int bRightPower = bRightDT.getCurrentPosition() + (int) (conversion * -distance * 1.1 + (error * 1.5 * speed));
 
             tLeftDT.setTargetPosition(tLeftPower);
             bLeftDT.setTargetPosition(bLeftPower);
@@ -116,13 +137,16 @@ public class Bot {
             bRightDT.setPower(speed);
 
             while (opMode.opModeIsActive() && !done) {
-                double error = 0.9;
 
-                double actError = (tLeftPower - tLeftDT.getCurrentPosition()) + (bLeftPower - bLeftDT.getCurrentPosition()) +
-                        (tRightPower - tRightDT.getCurrentPosition()) + (bRightPower - bRightDT.getCurrentPosition());
+                double actError = error * (Math.abs(tLeftPower) - Math.abs(tLeftDT.getCurrentPosition())) + error *  (Math.abs(bLeftPower) - Math.abs(bLeftDT.getCurrentPosition())) + error *
+                        (Math.abs(tRightPower) - Math.abs(tRightDT.getCurrentPosition())) + error *  (Math.abs(bRightPower) - Math.abs(bRightDT.getCurrentPosition()));
 
-                if (error > actError) {
+                if (error >= actError - .5 && error <= actError + .5) {
                     done = true;
+                    tLeftDT.setPower(0);
+                    tRightDT.setPower(0);
+                    bLeftDT.setPower(0);
+                    bRightDT.setPower(0);
                 }
             }
 
@@ -131,23 +155,28 @@ public class Bot {
 
     }
 
-    public static void driveStraight(double speed, double fLeftcm, double fRightcm, double bLeftcm,
-                                     double bRightcm, LinearOpMode opmode){
+    public static void driveStraight (float distance, double speed, LinearOpMode opMode)
+    {
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        tLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bRightDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bLeftDT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // if it breaks do this https://github.com/AnishJag/FTCFreightFrenzy/blob/master/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Base/MainBase.java
+        if(opMode.opModeIsActive()) {
+            double error = distance / Math.abs(distance);
 
-        if(opmode.opModeIsActive()) {
-            int newFrontLeftTarget = tLeftDT.getCurrentPosition() - (int) (fLeftcm * conversion);
-            int newFrontRightTarget = tRightDT.getCurrentPosition() + (int) (fRightcm * conversion);
-            int newBackLeftTarget = bLeftDT.getCurrentPosition() + (int) (bLeftcm * conversion);
-            int newBackRightTarget = bRightDT.getCurrentPosition() - (int) (bRightcm * conversion);
 
             boolean done = false;
 
+            int tLeftPower = tLeftDT.getCurrentPosition() - (int) (conversion * distance * 1.1 + (error * 1.5 * speed));
+            int bLeftPower = bLeftDT.getCurrentPosition() - (int) (conversion * distance * 1.1 + (error * 1.5 * speed));
+            int tRightPower = tRightDT.getCurrentPosition() - (int) (conversion * distance * 1.1 - (error * 1.5 * speed));
+            int bRightPower = bRightDT.getCurrentPosition() - (int) (conversion * distance * 1.1 - (error * 1.5 * speed));
 
-            // Set Target and Turn On RUN_TO_POSITION
-            tLeftDT.setTargetPosition(newFrontLeftTarget);
-            tRightDT.setTargetPosition(newFrontRightTarget);
-            bLeftDT.setTargetPosition(newBackLeftTarget);
-            bRightDT.setTargetPosition(newBackRightTarget);
+            tLeftDT.setTargetPosition(tLeftPower);
+            bLeftDT.setTargetPosition(bLeftPower);
+            tRightDT.setTargetPosition(tRightPower);
+            bRightDT.setTargetPosition(bRightPower);
 
             tLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             bLeftDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -155,21 +184,22 @@ public class Bot {
             bRightDT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            tLeftDT.setPower(Math.abs(speed));
-            tRightDT.setPower(Math.abs(speed));
-            bLeftDT.setPower(Math.abs(speed));
-            bRightDT.setPower(Math.abs(speed));
+            tLeftDT.setPower(speed);
+            tRightDT.setPower(speed);
+            bLeftDT.setPower(speed);
+            bRightDT.setPower(speed);
 
-            while (opmode.opModeIsActive() && !done) {
-                double error = 0.9;
+            while (opMode.opModeIsActive() && !done) {
 
-                double actError = (newFrontLeftTarget - tLeftDT.getCurrentPosition()) + (newFrontRightTarget - tRightDT.getCurrentPosition()) +
-                (newBackLeftTarget - bLeftDT.getCurrentPosition()) + (newBackRightTarget - bRightDT.getCurrentPosition());
+                double actError = error * (Math.abs(tLeftPower) - Math.abs(tLeftDT.getCurrentPosition())) + error *  (Math.abs(bLeftPower) - Math.abs(bLeftDT.getCurrentPosition())) + error *
+                        (Math.abs(tRightPower) - Math.abs(tRightDT.getCurrentPosition())) + error *  (Math.abs(bRightPower) - Math.abs(bRightDT.getCurrentPosition()));
 
-
-
-                if (error > actError){
+                if (error >= actError - .5 && error <= actError + .5) {
                     done = true;
+                    tLeftDT.setPower(0);
+                    tRightDT.setPower(0);
+                    bLeftDT.setPower(0);
+                    bRightDT.setPower(0);
                 }
             }
 

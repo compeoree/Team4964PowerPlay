@@ -33,26 +33,26 @@ public class ParkingAutoLeft extends LinearOpMode {
 
         //robot.strafeDrive(-40, 0, 0.7, this);
         //robot.strafeDrive(0,70, 0.7, this);
-        // robot.strafeDrive(-39, 0, 0.7, this);
-        Bot.strafeDrive(-40,.7, this);
-        Bot.driveStraight(.7, 70, 70, 70, 70,  this);
-        Bot.strafeDrive(39,.7, this);
+    //   // robot.strafeDrive(-39, 0, 0.7, this);
+    //   Bot.strafeDrive(-40,.7, this);
+    //   Bot.driveStraight(.7, 70, 70, 70, 70,  this);
+    //   Bot.strafeDrive(39,.7, this);
 
 
-        // getting into position to drop cone
-        Bot.Lift.setTargetPosition(var.Lvl_Tall);
-        //robot.strafeDrive(0, 4, 0.7, this);
-        Bot.driveStraight(.7, 4, 4, 4, 4,  this);
+    //   // getting into position to drop cone
+    //   Bot.Lift.setTargetPosition(var.Lvl_Tall);
+    //   //robot.strafeDrive(0, 4, 0.7, this);
+    //   Bot.driveStr//aight(.7, 4, 4, 4, 4,  this);
 
-        Bot.Claw.setTargetPosition(var.claw_open);
-        //robot.strafeDrive(0, -4, 0.7, this);
-        Bot.driveStraight(.7, -4, -4, -4, -4, this);
-        Bot.Lift.setTargetPosition(var.Lvl_Ground);
-        Bot.Claw.setTargetPosition(var.claw_zero);
-        //robot.strafeDrive(30, 0, 0.7, this);
-        //robot.strafeDrive(0, 65, 0.7, this);
-        Bot.strafeDrive(-30,.7, this);
-        Bot.driveStraight(.7, 65, 65, 65, 65, this);
+    //   Bot.Claw.setTargetPosition(var.claw_open);
+    //   //robot.strafeDrive(0, -4, 0.7, this);
+    //   Bot.driveStraight(.7, -4, -4, -4, -4, this);
+    //   Bot.Lift.setTargetPosition(var.Lvl_Ground);
+    //   Bot.Claw.setTargetPosition(var.claw_zero);
+    //   //robot.strafeDrive(30, 0, 0.7, this);
+    //   //robot.strafeDrive(0, 65, 0.7, this);
+    //   Bot.strafeDrive(-30,.7, this);
+    //   Bot.driveStraight(.7, 65, 65, 65, 65, this);
 
 
         // make the decision
