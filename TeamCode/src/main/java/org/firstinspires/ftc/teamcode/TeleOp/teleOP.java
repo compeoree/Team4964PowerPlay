@@ -103,7 +103,7 @@ public class teleOP extends OpMode {
 
         //Slow Mode Code for a and b keys
         if (gamepad1.a) {
-            speedMode = .4;
+            speedMode = .6;
         }
         if (gamepad1.b) {
             speedMode = 1;
