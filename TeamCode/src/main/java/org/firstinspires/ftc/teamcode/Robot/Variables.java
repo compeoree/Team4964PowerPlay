@@ -7,7 +7,7 @@ public class Variables  {
             Lvl_Tall   = -3000;
     public boolean slo,
             btnlock = false;
-    public int claw_zero = 35,
+    public int claw_zero = 15, //35,
             claw_cone = -28;
     static final double     COUNTS_PER_MOTOR_REV    = 19;
     static final double     DRIVE_GEAR_REDUCTION    = 40;
