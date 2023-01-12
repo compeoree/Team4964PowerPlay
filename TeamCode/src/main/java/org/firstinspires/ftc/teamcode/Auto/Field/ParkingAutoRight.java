@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Auto.Detection.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
@@ -89,11 +90,18 @@ public class ParkingAutoRight extends LinearOpMode {
         Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Bot.Claw.setPower(1);
         sleep(550);
-        Bot.strafeDrive(-55,.5, this);
+        Bot.strafeDrive(-55,.6, this);
         sleep(5);
-        Bot.driveStraight(125,.5, this);
+        Bot.driveStraight(125,.6, this);
         sleep(5);
-        Bot.strafeDrive(37,.3,this);
+        Bot.distance.getDistance(DistanceUnit.CM);
+        Bot.SensorStrafeDrive(50,.2,this); //distance was 37
+        int i=0;
+//        while(i++<500) {
+//            telemetry.addLine("distance:" + Bot.distance.getDistance(DistanceUnit.CM));
+//            telemetry.update();
+//        }
+        Bot.strafeDrive(-12, 0.3, this);
     }
 
     void ACTII(){
@@ -102,14 +110,14 @@ public class ParkingAutoRight extends LinearOpMode {
         Bot.Lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Bot.Lift.setPower(1);
         sleep(-var.Lvl_Tall);
-        Bot.driveStraight(16, .3, this);
-        Bot.Lift.setTargetPosition(var.Lvl_Tall + 200);
-        sleep(75);
+        Bot.driveStraight(10, .3, this);
+        Bot.Lift.setTargetPosition(var.Lvl_Tall + 600);
+        sleep(3000);
         //Bot.strafeDrive(3,.5,this);
         Bot.Claw.setTargetPosition(var.claw_zero);
         sleep(2000);
-        Bot.driveStraight(-20, .3, this);
-        sleep(1);
+        Bot.driveStraight(-16, .3, this);
+        sleep(2000);
         Bot.Claw.setTargetPosition(var.claw_cone);
         sleep(1200);
         Bot.Lift.setTargetPosition(var.Lvl_Ground);
