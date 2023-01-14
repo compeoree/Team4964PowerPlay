@@ -47,8 +47,8 @@ public class ParkingAutoLeft extends LinearOpMode {
     boolean ACTI() {
         Bot.Claw.setTargetPosition(var.claw_cone);
         sleep(1);
-        Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Bot.Claw.setPower(1);
+        Bot.Claw.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        Bot.Claw.setPower(-1);
         sleep(550);
         Bot.strafeDrive(75, .4, this);
         sleep(5);
@@ -79,7 +79,12 @@ public class ParkingAutoLeft extends LinearOpMode {
         Bot.Lift.setTargetPosition(var.Lvl_Tall + 600);
         sleep(75);
         //Bot.strafeDrive(3,.5,this);
+
+        Bot.Claw.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         Bot.Claw.setTargetPosition(var.claw_zero);
+        sleep(1);
+        Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Bot.Claw.setPower(1);
         sleep(200);
         Bot.driveStraight(-15, .3, this);
         sleep(1);
