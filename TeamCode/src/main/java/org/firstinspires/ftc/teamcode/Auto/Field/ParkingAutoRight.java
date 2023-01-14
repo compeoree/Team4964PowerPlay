@@ -44,10 +44,9 @@ public class ParkingAutoRight extends LinearOpMode {
        // robot.strafeDrive(-39, 0, 0.7, this);
 
 
-        ACTI();
-
-        ACTII();
-
+        if (ACTI()) {
+            ACTII();
+        }
         ACTIII();
 
 
@@ -84,24 +83,37 @@ public class ParkingAutoRight extends LinearOpMode {
     //    }
     }
 
-    void ACTI(){
+    boolean ACTI(){
         Bot.Claw.setTargetPosition(var.claw_cone);
         sleep(1);
         Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Bot.Claw.setPower(1);
         sleep(550);
-        Bot.strafeDrive(-55,.6, this);
+        Bot.strafeDrive(-55,.4, this);
         sleep(5);
         Bot.driveStraight(125,.6, this);
         sleep(5);
         Bot.distance.getDistance(DistanceUnit.CM);
-        Bot.SensorStrafeDrive(50,.2,this); //distance was 37
-        int i=0;
+        int i = 80;
+        while (opModeIsActive() && Bot.distance.getDistance(DistanceUnit.CM) < 40 && i > 0) {
+            sleep(50);
+            i--;
+        }
+        if (i == 0) {
+           Bot.driveStraight(-5, .5, this);
+           Bot.strafeDrive(37, .5, this);
+           return false;
+        }
+        else {
+            Bot.SensorStrafeDrive(50,.2,this);
+        }
+        //int i=0;
 //        while(i++<500) {
 //            telemetry.addLine("distance:" + Bot.distance.getDistance(DistanceUnit.CM));
 //            telemetry.update();
 //        }
         Bot.strafeDrive(-12, 0.3, this);
+        return true;
     }
 
     void ACTII(){
@@ -112,14 +124,14 @@ public class ParkingAutoRight extends LinearOpMode {
         sleep(-var.Lvl_Tall);
         Bot.driveStraight(10, .3, this);
         Bot.Lift.setTargetPosition(var.Lvl_Tall + 600);
-        sleep(3000);
+        sleep(300);
         //Bot.strafeDrive(3,.5,this);
         Bot.Claw.setTargetPosition(var.claw_zero);
-        sleep(2000);
+        sleep(200);
         Bot.driveStraight(-16, .3, this);
-        sleep(2000);
+        sleep(200);
         Bot.Claw.setTargetPosition(var.claw_cone);
-        sleep(1200);
+        sleep(500);
         Bot.Lift.setTargetPosition(var.Lvl_Ground);
         sleep(-var.Lvl_Tall);
         Bot.Lift.setPower(0);

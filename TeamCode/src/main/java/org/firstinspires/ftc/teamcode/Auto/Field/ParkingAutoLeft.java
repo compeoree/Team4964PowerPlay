@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Auto.Detection.ObjectDetector;
 import org.firstinspires.ftc.teamcode.Robot.Bot;
 import org.firstinspires.ftc.teamcode.Robot.Variables;
@@ -36,27 +37,38 @@ public class ParkingAutoLeft extends LinearOpMode {
         pos = position;
         telemetry.addData("position ", detector.getDecision(this));
 
-        ACTI();
+        if (ACTI()) {
 
-        ACTII();
-
+            ACTII();
+        }
         ACTIII();
     }
 
-    void ACTI(){
+    boolean ACTI() {
         Bot.Claw.setTargetPosition(var.claw_cone);
         sleep(1);
         Bot.Claw.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         Bot.Claw.setPower(1);
         sleep(550);
-        Bot.strafeDrive(75,.5, this);
+        Bot.strafeDrive(75, .4, this);
         sleep(5);
-        Bot.driveStraight(125,.5, this);
+        Bot.driveStraight(125, .5, this);
         sleep(5);
-        Bot.SensorStrafeDrive(-50, 0.2, this);
-        Bot.strafeDrive(-12,.3,this);
+        Bot.distance.getDistance(DistanceUnit.CM);
+        int i = 80;
+        while (opModeIsActive() && Bot.distance.getDistance(DistanceUnit.CM) < 40 && i > 0) {
+            sleep(50);
+            i--;
+        }
+        if (i == 0) {
+            Bot.SensorStrafeDrive(-50, 0.2, this);
+            Bot.strafeDrive(-12, .3, this);
+            return false;
+        }
+        Bot.SensorStrafeDrive(-50, .2, this);
+        Bot.strafeDrive(-15, 0.3, this);
+        return true;
     }
-
     void ACTII(){
         Bot.Lift.setTargetPosition(var.Lvl_Tall);
         sleep(1);
@@ -68,7 +80,7 @@ public class ParkingAutoLeft extends LinearOpMode {
         sleep(75);
         //Bot.strafeDrive(3,.5,this);
         Bot.Claw.setTargetPosition(var.claw_zero);
-        sleep(2000);
+        sleep(200);
         Bot.driveStraight(-15, .3, this);
         sleep(1);
         Bot.Claw.setTargetPosition(var.claw_cone);
